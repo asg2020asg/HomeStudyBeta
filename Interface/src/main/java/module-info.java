@@ -1,11 +1,10 @@
-module com.example.interface {
+module homestudy {
     requires javafx.controls;
     requires javafx.fxml;
 
-    requires org.controlsfx.controls;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.ikonli.javafx;
+    opens homestudy to javafx.fxml;
+    opens homestudy.interface_fx to javafx.fxml;
 
-    opens com.example.interface to javafx.fxml;
-    exports com.example.interface;
+    exports homestudy;
+    exports homestudy.interface_fx;
 }

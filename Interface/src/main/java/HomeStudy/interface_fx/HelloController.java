@@ -1,4 +1,4 @@
-package com.example.interface;
+package homestudy.interface_fx;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

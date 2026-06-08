@@ -1,4 +1,4 @@
-package com.example.interface;
+package homestudy;
 
 import javafx.application.Application;
 

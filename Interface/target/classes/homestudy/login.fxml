@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="homestudy.interface_fx.HelloController">
+    <children>
+        <Label layoutX="236.0" layoutY="60.0" text="HomeStudy" textFill="#2b3b4c">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+
+        <Label layoutX="175.0" layoutY="130.0" text="Usuário:" />
+        <TextField fx:id="campoUsuario" layoutX="175.0" layoutY="150.0" prefHeight="30.0" prefWidth="250.0" promptText="Digite seu usuário..." />
+
+        <Label layoutX="175.0" layoutY="195.0" text="Senha:" />
+        <PasswordField fx:id="campoSenha" layoutX="175.0" layoutY="215.0" prefHeight="30.0" prefWidth="250.0" promptText="Digite sua senha..." />
+
+        <Button layoutX="175.0" layoutY="270.0" mnemonicParsing="false" onAction="#aoClicarEntrar" prefHeight="35.0" prefWidth="250.0" style="-fx-background-color: #2b3b4c;" text="Entrar" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Button>
+
+        <Label fx:id="mensagemAlerta" alignment="CENTER" layoutX="50.0" layoutY="330.0" prefWidth="500.0" text="" textFill="RED">
+            <font>
+                <Font size="13.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

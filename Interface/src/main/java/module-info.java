@@ -1,10 +1,13 @@
 module homestudy {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
     opens homestudy to javafx.fxml;
-    opens homestudy.interface_fx to javafx.fxml;
+    opens homestudy.controller to javafx.fxml;
 
     exports homestudy;
-    exports homestudy.interface_fx;
+    exports homestudy.controller;
+    exports app;
+    opens app to javafx.fxml;
 }

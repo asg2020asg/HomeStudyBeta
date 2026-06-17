@@ -1,4 +1,4 @@
-package app;
+package homestudy.app;
 
 import homestudy.HelloApplication;
 import javafx.application.Application;

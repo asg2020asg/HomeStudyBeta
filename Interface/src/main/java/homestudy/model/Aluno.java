@@ -14,9 +14,9 @@ public class Aluno extends Usuario {
         this.periodo = periodo;
     }
     public void setCurso(String curso){this.curso = curso;}
-    String getCurso(){return curso;}
+    public String getCurso(){return curso;}
     public void setPeriodo(String periodo){this.periodo = periodo;}
-    String getPeriodo(){return periodo;}
+    public String getPeriodo(){return periodo;}
     //metodos
     @Override
     public void exibirDados(){

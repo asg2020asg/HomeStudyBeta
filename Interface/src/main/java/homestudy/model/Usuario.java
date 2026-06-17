@@ -18,31 +18,31 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
     public void setNome(String nome){ this.nome = nome;}
-    String getNome(){
+     public String getNome(){
         return nome;
     }
     public void setEmail(String email){
         this.email = email;
     }
-    String getEmail(){
+    public String getEmail(){
         return email;
     }
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-    String getTelefone(){
+    public String getTelefone(){
         return telefone;
     }
     public void setSenha(String senha){
         this.senha = senha;
     }
-    String getSenha(){
+    public String getSenha(){
         return senha;
     }
     public void setDataNascimento(Date dataNascimento){
         this.dataNascimento = dataNascimento;
     }
-    Date getData(){
+   public Date getData(){
         return dataNascimento;
     }
     //metodos

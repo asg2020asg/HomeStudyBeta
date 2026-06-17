@@ -9,13 +9,19 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        // AJUSTE AQUI: Adicionado "/homestudy/" antes do nome do arquivo
-        // Mude de hello-view.fxml para tela-principal.fxml
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/homestudy/login.fxml"));
+        // Aponta exatamente para o seu arquivo FXML de login
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/homestudy/tela-login.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        stage.setTitle("Hello!");
+        // Cria a cena. O tamanho se adapta ao prefWidth/prefHeight do FXML ou você define aqui
+        Scene scene = new Scene(fxmlLoader.load());
+
+        stage.setTitle("Sistema de Login");
         stage.setScene(scene);
+        stage.setResizable(false); // Impede o usuário de maximizar e quebrar o layout simples
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
     }
 }

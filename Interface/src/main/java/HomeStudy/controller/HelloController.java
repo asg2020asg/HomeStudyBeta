@@ -1,13 +1,10 @@
 package homestudy.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import java.io.IOException;
+import javafx.scene.paint.Color;
 
 public class HelloController {
 
@@ -18,34 +15,26 @@ public class HelloController {
     private PasswordField campoSenha;
 
     @FXML
-    private Label mensagemAlerta;
+    private Label labelMensagem;
 
     @FXML
-    void aoClicarEntrar() {
+    private void aoClicarEntrar() {
         String usuario = campoUsuario.getText();
         String senha = campoSenha.getText();
 
+        // Validação simples (Substitua pela sua lógica de banco de dados depois)
         if (usuario.isEmpty() || senha.isEmpty()) {
-            mensagemAlerta.setText("Por favor, preencha todos os campos!");
-        } else if (usuario.equals("admin") && senha.equals("123")) {
-            try {
-                // 1. Carrega o arquivo da nova tela (menu.fxml)
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/homestudy/menu.fxml"));
-                Scene novaCena = new Scene(fxmlLoader.load(), 600, 400);
+            labelMensagem.setTextFill(Color.RED);
+            labelMensagem.setText("Por favor, preencha todos os campos!");
+        } else if (usuario.equals("admin") && senha.equals("1234")) {
+            labelMensagem.setTextFill(Color.GREEN);
+            labelMensagem.setText("Login efetuado com sucesso!");
 
-                // 2. Pega o "palco" (Stage) atual através de qualquer componente da tela (como o campoUsuario)
-                Stage palcoAtual = (Stage) campoUsuario.getScene().getWindow();
-
-                // 3. Substitui a cena da janela pela nova tela do menu
-                palcoAtual.setScene(novaCena);
-                palcoAtual.setTitle("HomeStudy - Menu Principal");
-
-            } catch (IOException e) {
-                mensagemAlerta.setText("Erro ao carregar a tela de menu!");
-                e.printStackTrace();
-            }
+            // Aqui você colocaria o código para abrir a próxima tela (ex: tela-principal.fxml)
+            System.out.println("Abrindo tela principal...");
         } else {
-            mensagemAlerta.setText("Usuário ou senha incorretos!");
+            labelMensagem.setTextFill(Color.RED);
+            labelMensagem.setText("Usuário ou senha incorretos.");
         }
     }
 }

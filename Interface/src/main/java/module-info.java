@@ -6,8 +6,10 @@ module homestudy {
     opens homestudy to javafx.fxml;
     opens homestudy.controller to javafx.fxml;
 
+
+    opens homestudy.app to javafx.fxml;
+
     exports homestudy;
     exports homestudy.controller;
-    exports app;
-    opens app to javafx.fxml;
+    exports homestudy.app;
 }

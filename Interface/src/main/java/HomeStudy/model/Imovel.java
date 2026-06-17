@@ -19,7 +19,7 @@ public class Imovel {
         this.nomeImovel = nomeImovel;
     }
 
-    String getNomeImovel() {
+    public String getNomeImovel() {
         return nomeImovel;
     }
 
@@ -27,7 +27,7 @@ public class Imovel {
         this.endereco = endereco;
     }
 
-    String getEndereco() {
+    public String getEndereco() {
         return endereco;
     }
 
@@ -35,7 +35,7 @@ public class Imovel {
         this.informacaoImovel = informacaoImovel;
     }
 
-    String getInformacaoImovel() {
+    public String getInformacaoImovel() {
         return informacaoImovel;
     }
 
@@ -43,12 +43,12 @@ public class Imovel {
         this.valorImovel = valorImovel;
     }
 
-    String getValorImovel() {
+    public String getValorImovel() {
         return valorImovel;
     }
 
     //metodos
-    public void exibirDadosDoImovel() {
+    public void exibirDadosImovel() {
         System.out.println(" Dados do Imóvel: \n");
         System.out.println("Nome: " + getNomeImovel());
         System.out.println("Endereço: " + getEndereco());
@@ -57,7 +57,7 @@ public class Imovel {
 
     }
 
-    public void editarDadosDoImovel(String nome, String endereco, String informacaoImovel, String valorImovel) {
+    public void editarDadosImovel(String nome, String endereco, String informacaoImovel, String valorImovel) {
         setNomeImovel(nomeImovel);
         setEndereco(endereco);
         setInformacaoImovel(informacaoImovel);
@@ -65,7 +65,7 @@ public class Imovel {
 
     }
 
-    public void excluiDadosDoImovel() {
+    public void excluiDadosImovel() {
         nomeImovel = null;
         endereco = null;
         informacaoImovel = null;

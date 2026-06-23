@@ -3,7 +3,7 @@ package homestudy.model;
 import java.util.Date;
 import java.util.List;
 
-public class Aluno extends Usuario {
+public class Aluno extends Pessoa {
     //atributos
     private String curso;
     private String periodo;
@@ -16,13 +16,13 @@ public class Aluno extends Usuario {
     public void setCurso(String curso){this.curso = curso;}
     public String getCurso(){return curso;}
     public void setPeriodo(String periodo){this.periodo = periodo;}
-    public String getPeriodo(){return periodo;}
+   public   String getPeriodo(){return periodo;}
     //metodos
     @Override
     public void exibirDados(){
         super.exibirDados();
         System.out.println("Curso: "+curso+"Semestre: "+periodo);
     }
-    public List<Imovel> buscarImoveis();
-    public List<Aluno> buscarParceiros();
+   // public List<Imovel> buscarImoveis();//
+    //public List<Aluno> buscarParceiros();//
 }

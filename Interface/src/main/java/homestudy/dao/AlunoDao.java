@@ -18,7 +18,6 @@ public class AlunoDao {
         this.conexao = conexao;
     }
 
-    // CREATE
     public void inserir(Aluno aluno) {
 
         String sql =

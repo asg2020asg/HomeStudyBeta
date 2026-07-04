@@ -85,7 +85,7 @@ public class AlunoDao {
         return null;
     }
 
-    // READ ALL
+
     public List<Aluno> listarTodos() {
 
         List<Aluno> alunos =
@@ -122,7 +122,7 @@ public class AlunoDao {
         return alunos;
     }
 
-    // UPDATE
+
     public void atualizar(Aluno aluno) {
 
         String sql =
@@ -147,7 +147,7 @@ public class AlunoDao {
         }
     }
 
-    // DELETE
+
     public void excluir(String email) {
 
         String sql =

@@ -58,17 +58,17 @@ public class Imovel {
     }
 
     public void editarDadosImovel(String nome, String endereco, String informacaoImovel, String valorImovel) {
-        setNomeImovel(nomeImovel);
-        setEndereco(endereco);
-        setInformacaoImovel(informacaoImovel);
-        setValorImovel(valorImovel);
+        this.nomeImovel = nome;
+        this.endereco = endereco;
+        this.informacaoImovel = informacaoImovel;
+        this.valorImovel = valorImovel;
 
     }
 
     public void excluiDadosImovel() {
-        nomeImovel = null;
-        endereco = null;
-        informacaoImovel = null;
-        valorImovel = null;
+        this.nomeImovel = null;
+        this.endereco = null;
+        this.informacaoImovel = null;
+        this.valorImovel = null;
     }
 }

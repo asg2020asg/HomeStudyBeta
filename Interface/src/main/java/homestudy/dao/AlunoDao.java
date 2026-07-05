@@ -14,6 +14,7 @@ public class AlunoDao {
 
     private Connection conexao;
 
+    public AlunoDao() {}
     public AlunoDao(Connection conexao) {
         this.conexao = conexao;
     }

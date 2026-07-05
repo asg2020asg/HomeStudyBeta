@@ -38,7 +38,7 @@ public class ProprietarioDao {
                 return p;
             }
         }
-        return null; // Retorna null se não encontrar
+        return null;
     }
 
     public boolean atualizar(String emailAntigo, Proprietario proprietarioAtualizado) {

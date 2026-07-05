@@ -1,6 +1,6 @@
 package homestudy.dao;
 
-import homestudy.connection.Conexao;
+import homestudy.util.Conexao;
 import homestudy.model.Usuario;
 
 import java.sql.*;

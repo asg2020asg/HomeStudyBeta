@@ -1,9 +1,8 @@
 package homestudy.model;
 
 import java.util.Date;
-import java.util.List;
 
-public class Aluno extends Pessoa {
+public class Aluno extends Usuario {
     //atributos
     private String curso;
     private String periodo;

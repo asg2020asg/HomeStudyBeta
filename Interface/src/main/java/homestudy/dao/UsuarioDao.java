@@ -5,11 +5,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsuarioDAO {
+public class UsuarioDao {
+    private Connection conexao;
+
+    public UsuarioDao(Connection conexao) {
+        this.conexao = conexao;
+    }
+
     public void inserir(Usuario usuario){
-        String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNscimento) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNascimento) VALUES(?,?,?,?,?)";
         try{
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -18,15 +24,16 @@ public class UsuarioDAO {
 
             stmt.executeUpdate();
             stmt.close();
-            conn.close();
+
         }
         catch(SQLException e){
             e.printStackTrace();
         }
     }
     public void atualizar(Usuario usuario){
+        String sql = "UPDATE usuario SET nome=?, email=?, telefone=?, senha=?, dataNascimento=? WHERE id=?";
         try{
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -36,7 +43,7 @@ public class UsuarioDAO {
 
             stmt.executeUpdate();
             stmt.close();
-            conn.close();
+
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -44,7 +51,7 @@ public class UsuarioDAO {
     public Usuario buscarPorid(int id) {
         String sql = "SELECT * FROM usuario WHERE id=?";
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -58,13 +65,13 @@ public class UsuarioDAO {
 
                 rs.close();
                 stmt.close();
-                conn.close();
+
 
                 return usuario;
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,32 +79,37 @@ public class UsuarioDAO {
     }
     public List<Usuario> listarTodos(){
         String sql= "SELECT * FROM usuario";
+        List<Usuario> usuarios = new ArrayList<>();
         try{
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conexao.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
+                Usuario usuario = new Usuario(
+                        rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone"),
                         rs.getString("senha"),
                         rs.getDate("DataNascimento")
                 );
-
+                usuario.setId(rs.getInt("id"));
+                usuarios.add(usuario);
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         }catch(SQLException e){
             e.printStackTrace();
         }
+        return usuarios;
     }
     public void excluir(int id){
         String sql = "DELETE FROM usuario WHERE id= ?";
     try{
-        PreparedStatement stmt = conn.prepareStatement(sql);
+        PreparedStatement stmt = conexao.prepareStatement(sql);
         stmt.setInt(1,id);
         stmt.executeUpdate();
         stmt.close();
-        conn.close();
+
     }
     catch(SQLException e){
         e.printStackTrace();

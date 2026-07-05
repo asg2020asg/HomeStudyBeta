@@ -7,8 +7,8 @@ public class Administrador extends Usuario {
     private String login;
 
     //Construtor
-    public Administrador(int id,String nome, String email, String telefone, String senha, Date dataNascimento, String login) {
-        super(id, nome, email, telefone, senha, dataNascimento);
+    public Administrador(String nome, String email, String telefone, String senha, Date dataNascimento, String login) {
+        super(nome, email, telefone, senha, dataNascimento);
         this.login =login;
     }
 

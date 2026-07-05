@@ -1,6 +1,6 @@
 package homestudy.dao;
 
-import homestudy.model.Pessoa;
+import homestudy.model.Usuario;
 import homestudy.util.Conexao;
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UsuarioDAO {
 
-    public void inserir(Pessoa usuario){
+    public void inserir(Usuario usuario){
         String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNscimento) VALUES(?,?,?,?,?)";
         try{
             Connection conn = Conexao.getConnection();
@@ -27,7 +27,7 @@ public class UsuarioDAO {
             e.printStackTrace();
         }
     }
-    public void atualizar(Pessoa usuario){
+    public void atualizar(Usuario usuario){
         String sql = "UPDATE usuario SET nome=?, email=?, telefone=?, senha=?, dataNascimento=? WHERE id=?";
         try{
             Connection conn = Conexao.getConnection();
@@ -46,7 +46,7 @@ public class UsuarioDAO {
             e.printStackTrace();
         }
     }
-    public Pessoa buscarPorid(int id) {
+    public Usuario buscarPorid(int id) {
         String sql = "SELECT * FROM usuario WHERE id=?";
         try {
             Connection conn = Conexao.getConnection();
@@ -54,7 +54,7 @@ public class UsuarioDAO {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Pessoa usuario = new Pessoa(rs.getString("nome"),
+                Usuario usuario = new Usuario(rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone"),
                         rs.getString("senha"),
@@ -77,15 +77,15 @@ public class UsuarioDAO {
         }
         return null;
     }
-    public List<Pessoa> listarTodos(){
+    public List<Usuario> listarTodos(){
         String sql= "SELECT * FROM usuario";
-        List<Pessoa> usuarios = new ArrayList<>(); // Changed variable name to 'usuarios' for clarity
+        List<Usuario> usuarios = new ArrayList<>(); // Changed variable name to 'usuarios' for clarity
         try{
             Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                Pessoa usuario = new Pessoa(rs.getString("nome"),
+                Usuario usuario = new Usuario(rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone"),
                         rs.getString("senha"),

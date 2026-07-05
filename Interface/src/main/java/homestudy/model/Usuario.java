@@ -2,7 +2,7 @@ package homestudy.model;
 
 import java.util.Date;
 
-public class Pessoa {
+public class Usuario {
     //atributos
     protected int id;
     protected String nome;
@@ -11,7 +11,7 @@ public class Pessoa {
     protected String senha;
     protected Date dataNascimento;
     //construtor
-    public Pessoa(String nome, String email, String telefone, String senha, Date dataNascimento) {
+    public Usuario(String nome, String email, String telefone, String senha, Date dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;

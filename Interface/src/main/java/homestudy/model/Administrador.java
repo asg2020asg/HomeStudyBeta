@@ -7,8 +7,8 @@ public class Administrador extends Usuario {
     private String login;
 
     //Construtor
-    public Administrador(int id,String nome, String email, String telefone, String senha, Date dataNascimento, String login) {
-        super(id, nome, email, telefone, senha, dataNascimento);
+    public Administrador(String nome, String email, String telefone, String senha, Date dataNascimento, String login) {
+        super( nome, email, telefone, senha, dataNascimento);
         this.login =login;
     }
 
@@ -26,7 +26,7 @@ public class Administrador extends Usuario {
         System.out.println("O Administrador(a): " +getNome()+" está utilizando o sistema.");
     }
     public void excluirUsuario(Usuario usuario){
-        System.out.println("O Administrador(a): "+getNome()+" está excluindo o usuario: "+ usuario.getNome() +", Id: "+ usuario.getId()+ " do sistema.");
+        System.out.println("O Administrador(a): "+getNome()+" está excluindo o usuario: "+ usuario.getNome() +", Id: "+ usuario.getNome()+ " do sistema.");
     }
     public void bloquearUsuario(Usuario usuario){
         System.out.println("O Administrador(a): "+getNome()+", esta bloqueando o usuário:"+ usuario.getNome()+", o mesmo nao poderá efetuar login.");

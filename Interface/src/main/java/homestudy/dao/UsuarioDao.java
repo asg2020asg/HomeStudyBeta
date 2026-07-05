@@ -1,21 +1,19 @@
 package homestudy.dao;
 
+import homestudy.util.Conexao;
 import homestudy.model.Usuario;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDao {
-    private Connection conexao;
-
-    public UsuarioDao(Connection conexao) {
-        this.conexao = conexao;
-    }
-
+    //metodos
     public void inserir(Usuario usuario){
-        String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNascimento) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNscimento) VALUES(?,?,?,?,?)";
         try{
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -24,16 +22,17 @@ public class UsuarioDao {
 
             stmt.executeUpdate();
             stmt.close();
-
+            conn.close();
         }
         catch(SQLException e){
             e.printStackTrace();
         }
     }
     public void atualizar(Usuario usuario){
-        String sql = "UPDATE usuario SET nome=?, email=?, telefone=?, senha=?, dataNascimento=? WHERE id=?";
+        String sql = "UPDATE usuario SET"+"nome=?"+"email=?"+"telefone=?"+"senha=?"+"dataNascimento=?"+"WHERE id=?";
         try{
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -43,7 +42,7 @@ public class UsuarioDao {
 
             stmt.executeUpdate();
             stmt.close();
-
+            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -51,7 +50,8 @@ public class UsuarioDao {
     public Usuario buscarPorid(int id) {
         String sql = "SELECT * FROM usuario WHERE id=?";
         try {
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -65,13 +65,13 @@ public class UsuarioDao {
 
                 rs.close();
                 stmt.close();
-
+                conn.close();
 
                 return usuario;
             }
             rs.close();
             stmt.close();
-
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,40 +79,42 @@ public class UsuarioDao {
     }
     public List<Usuario> listarTodos(){
         String sql= "SELECT * FROM usuario";
-        List<Usuario> usuarios = new ArrayList<>();
+        List<Usuario> usuario = new ArrayList<>();
         try{
-            PreparedStatement stmt = conexao.prepareStatement(sql);
+            Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                Usuario usuario = new Usuario(
-                        rs.getString("nome"),
+                Usuario usuarios = new Usuario(rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone"),
                         rs.getString("senha"),
                         rs.getDate("DataNascimento")
                 );
-                usuario.setId(rs.getInt("id"));
-                usuarios.add(usuario);
+
+                usuarios.setId(rs.getInt("id"));
+                usuario.add(usuarios);
             }
             rs.close();
             stmt.close();
-
+            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return usuarios;
+        return usuario;
     }
     public void excluir(int id){
         String sql = "DELETE FROM usuario WHERE id= ?";
-    try{
-        PreparedStatement stmt = conexao.prepareStatement(sql);
-        stmt.setInt(1,id);
-        stmt.executeUpdate();
-        stmt.close();
-
+        try{
+            Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1,id);
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
-    catch(SQLException e){
-        e.printStackTrace();
-    }
-}
 }

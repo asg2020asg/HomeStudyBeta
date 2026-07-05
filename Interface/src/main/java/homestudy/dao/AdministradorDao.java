@@ -1,23 +1,23 @@
 package homestudy.dao;
 
 import homestudy.util.Conexao;
-import homestudy.model.Proprietario;
+import homestudy.model.Administrador;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.util.Date;
 
-public class ProprietarioDao {
-    public void inserir(Proprietario proprietario) {
-        String sqlInserir = "INSERT INTO proprietario (email) VALUES(?)";
+public class AdministradorDao {
+
+    public void inserir(Administrador admin) {
+        String sqlInserir = "INSERT INTO administrador(email, login) VALUES(? , ?)";
         try {
             Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlInserir);
-            stmt.setString(1, proprietario.getEmail());
+
+            stmt.setString(1, admin.getEmail());
+            stmt.setString(2, admin.getLogin());
+
             stmt.executeUpdate();
             stmt.close();
             conn.close();
@@ -26,13 +26,14 @@ public class ProprietarioDao {
         }
     }
 
-    public void atualizar(Proprietario proprietario) {
-        String sqlAtualizar = "UPDATE proprietario SET email=? WHERE email=?";
+    public void atualizar(Administrador admin) {
+        String sqlAtualizar = "UPDATE administrador SET login = ? WHERE email = ?";
         try {
             Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement((sqlAtualizar));
+            PreparedStatement stmt = conn.prepareStatement(sqlAtualizar);
 
-            stmt.setString(1, proprietario.getEmail());
+            stmt.setString(1, admin.getLogin());
+            stmt.setString(2, admin.getEmail());
 
             stmt.executeUpdate();
             stmt.close();
@@ -42,24 +43,24 @@ public class ProprietarioDao {
         }
     }
 
-    public List<Proprietario> listarTodos() {
-        String sqlListar = "SELECT * FROM proprietario";
-        List<Proprietario> lista = new ArrayList<>();
+    public List<Administrador> listarTodos() {
+        String sqlListar = "SELECT * FROM administrador";
+        List<Administrador> lista = new ArrayList<>();
         try {
             Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlListar);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Proprietario proprietario = new Proprietario(
-                        "",
+                Administrador admin = new Administrador(
                         "",
                         rs.getString("email"),
                         "",
-                        null
-
+                        "",
+                        null,
+                        rs.getString("login")
                 );
-                lista.add(proprietario);
+                lista.add(admin);
             }
             rs.close();
             stmt.close();
@@ -71,7 +72,7 @@ public class ProprietarioDao {
     }
 
     public void excluir(String email) {
-        String sqlExcluir = "DELETE FROM proprietario WHERE email=?";
+        String sqlExcluir = "DELETE FROM administrador WHERE email = ?";
         try {
             Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlExcluir);

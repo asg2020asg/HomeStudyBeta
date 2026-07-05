@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Pessoa {
     //atributos
+    protected int id;
     protected String nome;
     protected String email;
     protected String telefone;
@@ -16,6 +17,12 @@ public class Pessoa {
         this.telefone = telefone;
         this.senha = senha;
         this.dataNascimento = dataNascimento;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
     }
     public void setNome(String nome){ this.nome = nome;}
      public String getNome(){
@@ -42,7 +49,7 @@ public class Pessoa {
     public void setDataNascimento(Date dataNascimento){
         this.dataNascimento = dataNascimento;
     }
-   public Date getData(){
+   public Date getDataNascimento(){
         return dataNascimento;
     }
     //metodos

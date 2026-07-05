@@ -3,7 +3,7 @@ package homestudy.model;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Proprietario extends Pessoa {
+public class Proprietario extends Usuario {
     //atributos
     private ArrayList<Imovel> imoveis;
 

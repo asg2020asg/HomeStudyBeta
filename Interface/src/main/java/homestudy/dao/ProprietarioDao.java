@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ProprietarioDao {
 
-    // Lista que simula a nossa tabela de proprietários no banco de dados em memória
+
     private final List<Proprietario> listaProprietarios;
 
     // Construtor
@@ -16,7 +16,7 @@ public class ProprietarioDao {
 
     public void cadastrar(Proprietario proprietario) {
         if (proprietario != null) {
-            // Verifica se já existe alguém cadastrado com o mesmo e-mail para evitar duplicatas
+
             if (buscarPorEmail(proprietario.getEmail()) != null) {
                 System.out.println("Erro: Já existe um proprietário cadastrado com o e-mail " + proprietario.getEmail());
                 return;

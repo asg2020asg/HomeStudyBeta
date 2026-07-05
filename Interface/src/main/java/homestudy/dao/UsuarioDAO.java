@@ -12,7 +12,7 @@ public class UsuarioDAO {
     public void inserir(Usuario usuario){
         String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNscimento) VALUES(?,?,?,?,?)";
         try{
-            Connection conn = Conexao.conectar();
+            Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
@@ -31,7 +31,7 @@ public class UsuarioDAO {
     public void atualizar(Usuario usuario){
         String sql = "UPDATE usuario SET"+"nome=?"+"email=?"+"telefone=?"+"senha=?"+"dataNascimento=?"+"WHERE id=?";
         try{
-            Connection conn = Conexao.conectar();
+            Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
@@ -50,7 +50,7 @@ public class UsuarioDAO {
     public Usuario buscarPorid(int id) {
         String sql = "SELECT * FROM usuario WHERE id=?";
         try {
-            Connection conn = Conexao.conectar();
+            Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -81,7 +81,7 @@ public class UsuarioDAO {
         String sql= "SELECT * FROM usuario";
         List<Usuario> usuario = new ArrayList<>();
         try{
-            Connection conn = Conexao.conectar();
+            Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
@@ -106,7 +106,7 @@ public class UsuarioDAO {
     public void excluir(int id){
         String sql = "DELETE FROM usuario WHERE id= ?";
         try{
-            Connection conn = Conexao.conectar();
+            Connection conn = Conexao.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1,id);
             stmt.executeUpdate();

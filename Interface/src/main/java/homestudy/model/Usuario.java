@@ -42,7 +42,7 @@ public class Usuario {
     public void setDataNascimento(Date dataNascimento){
         this.dataNascimento = dataNascimento;
     }
-   public Date getData(){
+   public Date getDataNascimento(){
         return dataNascimento;
     }
     //metodos

@@ -1,19 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1">
-    <padding>
-        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
-    </padding>
+<VBox prefHeight="720.0" prefWidth="760.0" spacing="0.0" style="-fx-background-color: white; -fx-border-color: #5d5d5d; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox alignment="CENTER_LEFT" prefHeight="58.0" style="-fx-border-color: transparent transparent #6a6a6a transparent; -fx-border-width: 0 0 2 0;">
+        <padding><Insets left="18.0" right="18.0" /></padding>
+        <Label text="Radar">
+            <font><Font name="System Bold" size="22.0" /></font>
+        </Label>
+    </HBox>
 
-    <Label text="Tela do Mapa">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
-    <Label text="Aqui será exibido um mapa com a localização dos imóveis." />
+    <HBox alignment="CENTER_LEFT" prefHeight="74.0" spacing="22.0">
+        <padding><Insets left="28.0" right="28.0" /></padding>
+        <Button text="☰" style="-fx-background-color: transparent; -fx-font-size: 30px; -fx-text-fill: #222;" />
+        <TextField promptText="Pesquisar localizacao" prefHeight="42.0" prefWidth="430.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #777; -fx-border-width: 2; -fx-font-size: 15px;" />
+        <Button text="▽" style="-fx-background-color: transparent; -fx-font-size: 28px; -fx-text-fill: #222;" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label text="◎" style="-fx-font-size: 38px; -fx-text-fill: #222;" />
+    </HBox>
+
+    <HBox alignment="CENTER_LEFT" prefHeight="58.0">
+        <padding><Insets left="28.0" /></padding>
+        <Button text="+  Filtros" prefHeight="42.0" prefWidth="146.0" style="-fx-background-color: white; -fx-background-radius: 22; -fx-border-color: #777; -fx-border-radius: 22; -fx-border-width: 2; -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #444;" />
+    </HBox>
+
+    <Pane prefHeight="350.0" prefWidth="760.0" style="-fx-background-color: #edf0f2; -fx-border-color: #9a9a9a transparent #5d5d5d transparent; -fx-border-width: 2 0 2 0;">
+        <children>
+            <Line startX="-20.0" startY="30.0" endX="780.0" endY="270.0" stroke="#ffffff" strokeWidth="16.0" />
+            <Line startX="20.0" startY="300.0" endX="740.0" endY="40.0" stroke="#ffffff" strokeWidth="14.0" />
+            <Line startX="90.0" startY="0.0" endX="140.0" endY="350.0" stroke="#ffffff" strokeWidth="12.0" />
+            <Line startX="260.0" startY="0.0" endX="260.0" endY="350.0" stroke="#ffffff" strokeWidth="10.0" />
+            <Line startX="430.0" startY="0.0" endX="390.0" endY="350.0" stroke="#ffffff" strokeWidth="12.0" />
+            <Line startX="590.0" startY="0.0" endX="640.0" endY="350.0" stroke="#ffffff" strokeWidth="12.0" />
+            <Line startX="0.0" startY="95.0" endX="760.0" endY="80.0" stroke="#ffffff" strokeWidth="10.0" />
+            <Line startX="0.0" startY="210.0" endX="760.0" endY="200.0" stroke="#ffffff" strokeWidth="10.0" />
+            <Circle centerX="385.0" centerY="185.0" radius="88.0" fill="#80808055" stroke="#777777" strokeWidth="2.0" />
+            <Circle centerX="385.0" centerY="185.0" radius="19.0" fill="#1d6df0" />
+            <Circle centerX="385.0" centerY="185.0" radius="8.0" fill="WHITE" />
+            <Circle centerX="145.0" centerY="130.0" radius="14.0" fill="#d92828" />
+            <Circle centerX="145.0" centerY="130.0" radius="5.0" fill="WHITE" />
+            <Circle centerX="300.0" centerY="72.0" radius="14.0" fill="#d92828" />
+            <Circle centerX="300.0" centerY="72.0" radius="5.0" fill="WHITE" />
+            <Circle centerX="520.0" centerY="112.0" radius="14.0" fill="#d92828" />
+            <Circle centerX="520.0" centerY="112.0" radius="5.0" fill="WHITE" />
+            <Circle centerX="610.0" centerY="178.0" radius="14.0" fill="#d92828" />
+            <Circle centerX="610.0" centerY="178.0" radius="5.0" fill="WHITE" />
+            <Circle centerX="308.0" centerY="260.0" radius="14.0" fill="#d92828" />
+            <Circle centerX="308.0" centerY="260.0" radius="5.0" fill="WHITE" />
+        </children>
+    </Pane>
+
+    <VBox spacing="14.0" style="-fx-padding: 18 18 16 18;">
+        <Label text="Imoveis proximos">
+            <font><Font name="System Bold" size="20.0" /></font>
+        </Label>
+        <HBox alignment="CENTER_LEFT" spacing="18.0">
+            <VBox spacing="7.0">
+                <Rectangle width="140.0" height="78.0" fill="#c49a72" />
+                <Label text="R$ 850" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label text="0,8 km" style="-fx-font-size: 15px;" />
+            </VBox>
+            <VBox spacing="7.0">
+                <Rectangle width="140.0" height="78.0" fill="#bd8b52" />
+                <Label text="R$ 950" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label text="1,2 km" style="-fx-font-size: 15px;" />
+            </VBox>
+            <VBox spacing="7.0">
+                <Rectangle width="140.0" height="78.0" fill="#c9b087" />
+                <Label text="R$ 750" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label text="1,5 km" style="-fx-font-size: 15px;" />
+            </VBox>
+            <VBox spacing="7.0">
+                <Rectangle width="140.0" height="78.0" fill="#b9845f" />
+                <Label text="R$ 1.100" style="-fx-font-weight: bold; -fx-font-size: 16px;" />
+                <Label text="1,7 km" style="-fx-font-size: 15px;" />
+            </VBox>
+            <Label text="→" style="-fx-font-size: 42px; -fx-text-fill: #333;" />
+        </HBox>
+    </VBox>
 </VBox>

@@ -3,23 +3,32 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="760.0" spacing="26.0" style="-fx-background-color: white; -fx-border-color: #6a6a6a; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="homestudy.view.RegisterChoiceViewController">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0"/>
     </padding>
 
-    <Label text="Escolha seu tipo de cadastro">
+    <Label text="Criar Conta" style="-fx-text-fill: #222;">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System" size="40.0" />
         </font>
     </Label>
 
-    <Button text="Sou Aluno" onAction="#handleAlunoRegister" maxWidth="Infinity" prefHeight="40.0"/>
-    <Button text="Sou Proprietário" onAction="#handleProprietarioRegister" maxWidth="Infinity" prefHeight="40.0"/>
-    <Button text="Voltar" onAction="#handleBackButton" maxWidth="Infinity"/>
+    <Label text="Selecione o tipo de conta:" style="-fx-text-fill: #555;">
+        <font>
+            <Font name="System Bold" size="20.0" />
+        </font>
+    </Label>
 
+    <HBox alignment="CENTER" spacing="36.0">
+        <Button text="Sou Estudante&#10;Buscar moradias" onAction="#handleAlunoRegister" prefHeight="270.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #777; -fx-border-radius: 10; -fx-border-width: 2; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #444;"/>
+        <Button text="Sou Proprietario&#10;Anunciar imoveis" onAction="#handleProprietarioRegister" prefHeight="270.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #777; -fx-border-radius: 10; -fx-border-width: 2; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #444;"/>
+    </HBox>
+
+    <Button text="Voltar ao Login" onAction="#handleBackButton" prefHeight="54.0" prefWidth="260.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-border-width: 2; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #444;"/>
 </VBox>

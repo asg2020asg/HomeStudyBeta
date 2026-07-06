@@ -1,7 +1,7 @@
 package homestudy.view;
 
 import homestudy.app.GerenciadorTelas;
-import homestudy.model.Usuario; // Assumindo que você tem uma classe Usuario
+import homestudy.model.Usuario;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -24,31 +24,22 @@ public class MainViewController {
     @FXML private Button mapButton;
 
     private boolean sidebarOpen = false;
-    private double sidebarWidth = 200.0; // Largura desejada da sidebar quando aberta
+    private final double sidebarWidth = 200.0;
+    private Usuario usuarioLogado;
 
-    private Usuario usuarioLogado; // Para armazenar o usuário logado
-
-    // Método para injetar o usuário logado na tela principal
     public void setUsuarioLogado(Usuario usuario) {
         this.usuarioLogado = usuario;
-        // Aqui você pode, por exemplo, atualizar o texto de um label com o nome do usuário
-        // ou passar o usuário para as telas de conteúdo quando elas forem carregadas.
-        System.out.println("Usuário logado na MainViewController: " + usuario.getNome());
+        if (usuario != null) {
+            System.out.println("Usuario logado na MainViewController: " + usuario.getNome());
+        }
     }
 
     @FXML
     public void initialize() {
-        // Configura a largura inicial da sidebar para 0 (fechada)
         sidebar.setPrefWidth(0);
         sidebar.setMinWidth(0);
         sidebar.setMaxWidth(0);
-
-        // REMOVIDO: Listeners de mouse da sidebar VBox, pois ela começa com largura 0
-        // sidebar.setOnMouseEntered(event -> openSidebar());
-        // sidebar.setOnMouseExited(event -> closeSidebar());
-
-        // Carrega a tela de busca de imóveis como padrão ao iniciar
-        showPropertySearch();
+        showHome();
     }
 
     @FXML
@@ -101,37 +92,39 @@ public class MainViewController {
     }
 
     @FXML
+    private void showHome() {
+        loadContent("/homestudy/view/property-list-view.fxml");
+    }
+
+    @FXML
     private void showProfile() {
-        loadContent("/homestudy/view/profile-view.fxml", "profile");
+        loadContent("/homestudy/view/profile-view.fxml");
     }
 
     @FXML
     private void showPropertySearch() {
-        loadContent("/homestudy/view/property-search-view.fxml", "propertySearch");
+        loadContent("/homestudy/view/property-search-view.fxml");
     }
 
     @FXML
     private void showMap() {
-        loadContent("/homestudy/view/map-view.fxml", "map");
+        loadContent("/homestudy/view/map-view.fxml");
     }
 
-    private void loadContent(String fxmlPath, String viewType) {
+    private void loadContent(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            // Aqui você pode passar o usuário logado para o controller da sub-tela, se necessário
-            // Exemplo:
-            // if (viewType.equals("profile") && loader.getController() instanceof ProfileViewController) {
-            //     ProfileViewController controller = loader.getController();
-            //     controller.setUsuario(usuarioLogado);
-            // }
+            if (loader.getController() instanceof ProfileViewController controller) {
+                controller.setUsuario(usuarioLogado);
+            }
 
             contentArea.getChildren().setAll(root);
         } catch (IOException e) {
-            System.err.println("Erro ao carregar o conteúdo da tela: " + fxmlPath);
+            System.err.println("Erro ao carregar o conteudo da tela: " + fxmlPath);
             e.printStackTrace();
-            GerenciadorTelas.exibirAlerta("Erro", "Não foi possível carregar a tela. " + e.getMessage());
+            GerenciadorTelas.exibirAlerta("Erro", "Nao foi possivel carregar a tela. " + e.getMessage());
         }
     }
 }

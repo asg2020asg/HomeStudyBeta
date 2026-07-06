@@ -5,44 +5,64 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
+<VBox alignment="TOP_CENTER" prefHeight="720.0" prefWidth="820.0" spacing="16.0" style="-fx-background-color: white; -fx-border-color: #6a6a6a; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="homestudy.view.ProprietarioImovelRegisterViewController">
     <padding>
-        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+        <Insets bottom="30.0" left="54.0" right="54.0" top="30.0"/>
     </padding>
 
-    <Label text="Cadastro de Imóvel (2/2)">
+    <VBox prefHeight="140.0" prefWidth="420.0" style="-fx-background-color: linear-gradient(to bottom right, #d7ecff, #c9a986); -fx-border-color: #dddddd;" />
+
+    <HBox alignment="CENTER" spacing="6.0">
+        <Label text="Home" style="-fx-text-fill: #d92828;">
+            <font>
+                <Font name="System" size="38.0" />
+            </font>
+        </Label>
+        <Label text="Study" style="-fx-text-fill: #8a5318;">
+            <font>
+                <Font name="System" size="38.0" />
+            </font>
+        </Label>
+    </HBox>
+
+    <Label text="Cadastro de Imovel (2/2)" style="-fx-text-fill: #222;">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="28.0" />
         </font>
     </Label>
 
-    <VBox spacing="5.0">
-        <Label text="Nome do Imóvel:" />
-        <TextField fx:id="nomeImovelField" promptText="Ex: Apartamento Centro, Casa Estudantil" />
-    </VBox>
+    <GridPane alignment="CENTER" hgap="18.0" vgap="13.0" maxWidth="620.0">
+        <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="Nome do Imovel:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #444;" />
+            <TextField fx:id="nomeImovelField" promptText="Ex: Apartamento Centro, Casa Estudantil" prefHeight="38.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        </VBox>
 
-    <VBox spacing="5.0">
-        <Label text="Endereço:" />
-        <TextField fx:id="enderecoField" promptText="Rua, Número, Bairro, Cidade" />
-    </VBox>
+        <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="Endereco:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #444;" />
+            <TextField fx:id="enderecoField" promptText="Rua, numero, bairro, cidade" prefHeight="38.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        </VBox>
 
-    <VBox spacing="5.0">
-        <Label text="Informações Adicionais do Imóvel:" />
-        <TextArea fx:id="informacaoImovelArea" promptText="Ex: 3 quartos, mobiliado, próximo à universidade..." wrapText="true" />
-    </VBox>
+        <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Label text="Informacoes Adicionais do Imovel:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #444;" />
+            <TextArea fx:id="informacaoImovelArea" promptText="Ex: 3 quartos, mobiliado, proximo a universidade..." prefHeight="100.0" prefWidth="540.0" wrapText="true" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        </VBox>
 
-    <VBox spacing="5.0">
-        <Label text="Valor do Aluguel (R$):" />
-        <TextField fx:id="valorImovelField" promptText="Ex: 1500.00" />
-    </VBox>
+        <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <Label text="Valor do Aluguel (R$):" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #444;" />
+            <TextField fx:id="valorImovelField" promptText="Ex: 1500.00" prefHeight="38.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
+        </VBox>
+    </GridPane>
 
-    <Button text="Finalizar Cadastro" onAction="#handleFinishRegister" maxWidth="Infinity" defaultButton="true"/>
-    <Button text="Voltar" onAction="#handleBackButton" maxWidth="Infinity"/>
+    <HBox alignment="CENTER" spacing="14.0" style="-fx-padding: 10 0 0 0;">
+        <Button text="Finalizar Cadastro" onAction="#handleFinishRegister" prefHeight="42.0" prefWidth="180.0" defaultButton="true" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Voltar" onAction="#handleBackButton" prefHeight="42.0" prefWidth="160.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-text-fill: #333; -fx-font-weight: bold;"/>
+    </HBox>
 
     <Label fx:id="labelMensagem" textFill="RED" wrapText="true" />
-
 </VBox>

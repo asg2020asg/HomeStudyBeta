@@ -4,13 +4,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox alignment="TOP_CENTER" prefHeight="720.0" prefWidth="760.0" spacing="18.0" style="-fx-background-color: white; -fx-border-color: #6a6a6a; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="homestudy.view.EsqueceuSenhaViewController">
+      fx:controller="homestudy.view.NovaSenhaViewController">
 
     <padding>
         <Insets bottom="34.0" left="56.0" right="56.0" top="34.0"/>
@@ -31,24 +30,13 @@
         </Label>
     </HBox>
 
-    <Label text="Redefinir Senha" style="-fx-text-fill: #222;">
+    <Label text="Definir Nova Senha" style="-fx-text-fill: #222;">
         <font>
             <Font name="System Bold" size="30.0" />
         </font>
     </Label>
 
     <VBox maxWidth="360.0" spacing="14.0">
-        <VBox spacing="6.0">
-            <Label text="E-mail:" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #444;" />
-            <TextField fx:id="emailField" promptText="Digite seu e-mail cadastrado" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
-        </VBox>
-
-        <VBox spacing="6.0">
-            <Label text="Data de Nascimento (DD/MM/AAAA):" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #444;" />
-            <TextField fx:id="dataNascimentoField" promptText="Ex: 01/01/2000" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
-        </VBox>
-
-        <!-- Novos campos para a nova senha -->
         <VBox spacing="6.0">
             <Label text="Nova Senha:" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #444;" />
             <PasswordField fx:id="novaSenhaField" promptText="Digite sua nova senha" prefHeight="40.0" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5; -fx-background-radius: 5;" />
@@ -60,7 +48,7 @@
         </VBox>
 
         <Button text="Redefinir Senha" onAction="#handleResetPassword" maxWidth="Infinity" prefHeight="42.0" defaultButton="true" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;"/>
-        <Button text="Voltar" onAction="#handleBackButton" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-text-fill: #333; -fx-font-weight: bold;"/>
+        <Button text="Cancelar" onAction="#handleCancel" maxWidth="Infinity" prefHeight="40.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-text-fill: #333; -fx-font-weight: bold;"/>
     </VBox>
 
     <Label fx:id="labelMensagem" textFill="RED" wrapText="true" />

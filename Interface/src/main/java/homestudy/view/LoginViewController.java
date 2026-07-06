@@ -19,28 +19,28 @@ import java.io.IOException; // Importar IOException
 public class LoginViewController {
     @FXML private TextField emailField;
     @FXML private PasswordField senhaField;
-    @FXML private Label labelMensagem; // Adicionado para exibir mensagens
+    @FXML private Label labelMensagem;
     private UsuarioController uc = new UsuarioController();
 
     @FXML
     public void btnEntrar() {
         String email = emailField.getText();
         String senha = senhaField.getText();
-        Stage stage = (Stage) emailField.getScene().getWindow(); // Obter o Stage atual
+        Stage stage = (Stage) emailField.getScene().getWindow();
 
         if (email.isEmpty() || senha.isEmpty()) {
             exibirAlerta("Aviso", "Preencha todos os campos.");
             return;
         }
 
-        Usuario usuarioLogado = uc.Login(email, senha); // Chama o método Login que retorna Usuario ou null
+        Usuario usuarioLogado = uc.Login(email, senha);
 
         if (usuarioLogado != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/main-view.fxml"));
                 Parent root = loader.load();
                 MainViewController mainController = loader.getController();
-                mainController.setUsuarioLogado(usuarioLogado); // Passa o usuário logado para o MainViewController
+                mainController.setUsuarioLogado(usuarioLogado);
 
                 Scene scene;
                 if (stage.getWidth() > 0 && stage.getHeight() > 0) {
@@ -48,10 +48,10 @@ public class LoginViewController {
                 } else {
                     scene = new Scene(root);
                 }
-                stage.setTitle("HomeStudy Beta - " + usuarioLogado.getNome()); // Define o título com o nome do usuário
+                stage.setTitle("HomeStudy Beta - " + usuarioLogado.getNome());
                 stage.setScene(scene);
                 stage.show();
-                Platform.runLater(() -> stage.setMaximized(true)); // Garante que a tela principal abra maximizada
+                Platform.runLater(() -> stage.setMaximized(true));
             } catch (IOException e) {
                 exibirAlerta("Erro", "Não foi possível carregar a tela principal: " + e.getMessage());
                 e.printStackTrace();
@@ -63,22 +63,22 @@ public class LoginViewController {
 
     @FXML
     private void handleForgotPassword() {
-        // Lógica para ir para a tela de redefinição de senha
+
         Stage stage = (Stage) emailField.getScene().getWindow();
         GerenciadorTelas.mudarTela(stage, "/homestudy/view/forgot-password-view.fxml", "Redefinir Senha");
     }
 
     @FXML
     private void handleBackButton() {
-        // Lógica para voltar para a tela inicial
+
         Stage stage = (Stage) emailField.getScene().getWindow();
-        GerenciadorTelas.mudarTela(stage, "/homestudy/view/initial-view.fxml", "HomeStudy Beta");
+        GerenciadorTelas.mudarTela(stage, "/homestudy/view/inicio-view.fxml", "HomeStudy Beta");
     }
 
     private void exibirAlerta(String titulo, String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
-        alert.setHeaderText(null); // Não precisa de cabeçalho para alertas simples
+        alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }

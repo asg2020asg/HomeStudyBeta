@@ -1,7 +1,7 @@
 package homestudy.view;
 
 import homestudy.app.GerenciadorTelas;
-import homestudy.model.Proprietario;
+import homestudy.controller.AlunoController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -13,21 +13,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ProprietarioRegisterViewController {
+public class AlunoRegistroViewController {
 
     @FXML private TextField nomeField;
     @FXML private TextField emailField;
     @FXML private TextField telefoneField;
     @FXML private PasswordField senhaField;
     @FXML private TextField dataNascimentoField;
+    @FXML private TextField cursoField;
+    @FXML private TextField periodoField;
     @FXML private Label labelMensagem;
 
-
-    private static Proprietario proprietarioEmCadastro;
-
-    public static Proprietario getProprietarioEmCadastro() {
-        return proprietarioEmCadastro;
-    }
+    private AlunoController alunoController = new AlunoController();
 
     @FXML
     public void initialize() {
@@ -52,21 +49,21 @@ public class ProprietarioRegisterViewController {
             }
 
 
-            if (formattedValue.length() > 15) {
+            if (formattedValue.length() > 15) { // (XX) XXXXX-XXXX -> 15 caracteres
                 formattedValue.setLength(15);
             }
 
 
             if (!newValue.equals(formattedValue.toString())) {
                 telefoneField.setText(formattedValue.toString());
-
+                // Mantém o cursor no final
                 telefoneField.positionCaret(formattedValue.length());
             }
         });
 
 
         dataNascimentoField.textProperty().addListener((observable, oldValue, newValue) -> {
-            String cleanValue = newValue.replaceAll("[^\\d]", "");
+            String cleanValue = newValue.replaceAll("[^\\d]", ""); // Remove tudo que não for dígito
             StringBuilder formattedValue = new StringBuilder();
 
             if (cleanValue.length() > 0) {
@@ -84,28 +81,30 @@ public class ProprietarioRegisterViewController {
             }
 
 
-            if (formattedValue.length() > 10) {
+            if (formattedValue.length() > 10) { // DD/MM/AAAA -> 10 caracteres
                 formattedValue.setLength(10);
             }
 
 
             if (!newValue.equals(formattedValue.toString())) {
                 dataNascimentoField.setText(formattedValue.toString());
-
+                // Mantém o cursor no final
                 dataNascimentoField.positionCaret(formattedValue.length());
             }
         });
     }
 
     @FXML
-    private void handleNext() {
+    private void handleRegister() {
         String nome = nomeField.getText();
         String email = emailField.getText();
         String telefone = telefoneField.getText();
         String senha = senhaField.getText();
         String dataNascimentoStr = dataNascimentoField.getText();
+        String curso = cursoField.getText();
+        String periodo = periodoField.getText();
 
-        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || dataNascimentoStr.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || dataNascimentoStr.isEmpty() || curso.isEmpty() || periodo.isEmpty()) {
             exibirAlerta("Aviso", "Por favor, preencha todos os campos obrigatórios.");
             return;
         }
@@ -123,23 +122,25 @@ public class ProprietarioRegisterViewController {
         }
         dataNascimentoStr = dataNascimentoClean.substring(0,2) + "/" + dataNascimentoClean.substring(2,4) + "/" + dataNascimentoClean.substring(4,8);
 
-
         Date dataNascimento = null;
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            formatter.setLenient(false);
+            formatter.setLenient(false); // Não permite datas inválidas como 30/02
             dataNascimento = formatter.parse(dataNascimentoStr);
         } catch (ParseException e) {
             exibirAlerta("Erro de Formato", "Formato de data inválido. Use DD/MM/AAAA.");
             return;
         }
 
+        try {
+            alunoController.cadastrarAluno(nome, email, telefone, senha, dataNascimento, curso, periodo);
+            exibirAlerta("Sucesso", "Aluno cadastrado com sucesso!");
 
-        proprietarioEmCadastro = new Proprietario(nome, email, telefone, senha, dataNascimento);
-
-
-        Stage stage = (Stage) nomeField.getScene().getWindow();
-        GerenciadorTelas.mudarTela(stage, "/homestudy/view/proprietario-imovel-registro-view.fxml", "Cadastro de Imóvel");
+            Stage stage = (Stage) nomeField.getScene().getWindow();
+            GerenciadorTelas.mudarTela(stage, "/homestudy/view/login-view.fxml", "Login HomeStudy");
+        } catch (Exception e) {
+            exibirAlerta("Erro de Cadastro", "Ocorreu um erro ao cadastrar o aluno: " + e.getMessage());
+        }
     }
 
     @FXML

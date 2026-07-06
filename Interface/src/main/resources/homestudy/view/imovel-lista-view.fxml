@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="648.0" prefWidth="900.0" spacing="18.0" style="-fx-background-color: white;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="homestudy.view.ListaImovelViewController">
+    <padding>
+        <Insets bottom="28.0" left="34.0" right="34.0" top="28.0"/>
+    </padding>
+
+    <Label text="Imoveis disponiveis" style="-fx-text-fill: #222;">
+        <font>
+            <Font name="System Bold" size="28.0" />
+        </font>
+    </Label>
+
+    <Label text="Escolha uma moradia ou use a busca e os filtros acima para refinar os resultados." style="-fx-text-fill: #555; -fx-font-size: 15px;" />
+
+    <FlowPane fx:id="propertyContainer" hgap="18.0" vgap="18.0" prefWrapLength="800.0" />
+</VBox>

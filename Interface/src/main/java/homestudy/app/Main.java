@@ -1,10 +1,10 @@
 package homestudy.app;
 
-import homestudy.HelloApplication;
+import homestudy.Começo;
 import javafx.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-        Application.launch(HelloApplication.class, args);
+        Application.launch(Começo.class, args);
     }
 }

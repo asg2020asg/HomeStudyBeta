@@ -48,7 +48,7 @@ public class ProprietarioImovelRegisterViewController {
 
     @FXML
     public void initialize() {
-        // Popula o ComboBox com as opções de tipo de imóvel
+
         tipoImovelComboBox.setItems(FXCollections.observableArrayList(
                 "Casa", "Apartamento", "Kitnet", "Republica"
         ));
@@ -60,7 +60,7 @@ public class ProprietarioImovelRegisterViewController {
         String endereco = enderecoField.getText();
         String informacaoImovel = informacaoImovelArea.getText();
         String valorImovel = valorImovelField.getText();
-        String tipoImovel = tipoImovelComboBox.getValue(); // NOVO: Obtém o tipo de imóvel selecionado
+        String tipoImovel = tipoImovelComboBox.getValue();
 
         if (nomeImovel.isEmpty() || endereco.isEmpty() || valorImovel.isEmpty() || tipoImovel == null || tipoImovel.isEmpty()) {
             exibirAlerta("Aviso", "Por favor, preencha todos os campos obrigatórios do imóvel, incluindo o tipo.");
@@ -68,7 +68,7 @@ public class ProprietarioImovelRegisterViewController {
         }
 
         try {
-            Double.parseDouble(valorImovel); // Apenas para validar se é um número
+            Double.parseDouble(valorImovel);
         } catch (NumberFormatException e) {
             exibirAlerta("Erro de Formato", "O valor do imóvel deve ser um número válido.");
             return;
@@ -84,23 +84,22 @@ public class ProprietarioImovelRegisterViewController {
         if (proprietario == null) {
             exibirAlerta("Erro", "Dados do proprietário não encontrados. Por favor, reinicie o cadastro.");
             Stage stage = (Stage) nomeImovelField.getScene().getWindow();
-            GerenciadorTelas.mudarTela(stage, "/homestudy/view/initial-view.fxml", "HomeStudy Beta");
+            GerenciadorTelas.mudarTela(stage, "/homestudy/view/inicio-view.fxml", "HomeStudy Beta");
             return;
         }
 
         try {
             if (!modoAdicionarApenas) {
-                // 1. Persistir o Proprietário (que já inclui a inserção na tabela 'usuario')
-                // O proprietarioDao.inserir já define o ID gerado no objeto 'proprietario'
+
                 proprietarioDao.inserir(proprietario);
 
-                // --- DEBUG: Verificar o ID do proprietário após a inserção ---
+
                 System.out.println("DEBUG: Proprietário inserido com ID: " + proprietario.getId());
                 if (proprietario.getId() <= 0) {
                     throw new RuntimeException("Falha crítica: ID do proprietário não foi gerado ou é inválido após a inserção.");
                 }
 
-                // --- DEBUG: Tentar buscar o proprietário recém-criado para verificar a persistência ---
+
                 Proprietario proprietarioVerificado = proprietarioDao.buscarPorEmail(proprietario.getEmail());
                 if (proprietarioVerificado != null && proprietarioVerificado.getId() == proprietario.getId()) {
                     System.out.println("DEBUG: Proprietário (ID: " + proprietarioVerificado.getId() + ") encontrado no DB após inserção.");
@@ -110,26 +109,24 @@ public class ProprietarioImovelRegisterViewController {
                 }
             }
 
-            // 2. Criar o objeto Imovel e associá-lo ao proprietário
-            // NOVO: Passando o tipoImovel para o construtor
-            Imovel novoImovel = new Imovel(nomeImovel, endereco, informacaoImovel, valorImovel, tipoImovel);
-            novoImovel.setProprietarioId(proprietario.getId()); // Define o ID do proprietário no imóvel
 
-            // --- DEBUG: Verificar o proprietarioId do imóvel antes de cadastrar ---
+            Imovel novoImovel = new Imovel(nomeImovel, endereco, informacaoImovel, valorImovel, tipoImovel);
+            novoImovel.setProprietarioId(proprietario.getId());
+
             System.out.println("DEBUG: Imóvel sendo cadastrado com proprietarioId: " + novoImovel.getProprietarioId());
 
-            // 3. Persistir o Imóvel no banco de dados
+
             imovelDao.cadastrar(novoImovel);
 
             if (modoAdicionarApenas) {
                 exibirAlerta("Sucesso", "Novo imóvel cadastrado com sucesso!");
-                // Retornar para a lista de imóveis na área principal
+
                 if (mainViewController != null) {
                     mainViewController.showHome();
                 }
             } else {
                 exibirAlerta("Sucesso", "Cadastro de Proprietário e Imóvel finalizado com sucesso!");
-                // Redirecionar para a tela de login
+
                 Stage stage = (Stage) nomeImovelField.getScene().getWindow();
                 GerenciadorTelas.mudarTela(stage, "/homestudy/view/login-view.fxml", "Login HomeStudy");
             }
@@ -148,7 +145,7 @@ public class ProprietarioImovelRegisterViewController {
             }
         } else {
             Stage stage = (Stage) nomeImovelField.getScene().getWindow();
-            GerenciadorTelas.mudarTela(stage, "/homestudy/view/proprietario-register-view.fxml", "Cadastro de Proprietário");
+            GerenciadorTelas.mudarTela(stage, "/homestudy/view/proprietario-registro-view.fxml", "Cadastro de Proprietário");
         }
     }
 

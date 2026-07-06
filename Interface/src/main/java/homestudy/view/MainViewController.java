@@ -1,7 +1,7 @@
 package homestudy.view;
 
 import homestudy.app.GerenciadorTelas;
-import homestudy.model.Imovel; // Importar Imovel
+import homestudy.model.Imovel;
 import homestudy.model.Usuario;
 import homestudy.model.Proprietario;
 import javafx.animation.KeyFrame;
@@ -28,12 +28,12 @@ public class MainViewController {
     @FXML private Button profileButton;
     @FXML private Button addPropertyButton;
     @FXML private Button mapButton;
-    @FXML private TextField searchTextField; // Adicionado fx:id para o campo de busca
+    @FXML private TextField searchTextField;
 
     private boolean sidebarOpen = false;
     private final double sidebarWidth = 200.0;
     private Usuario usuarioLogado;
-    private Map<String, String> currentFilters = new HashMap<>(); // Para armazenar os filtros aplicados
+    private Map<String, String> currentFilters = new HashMap<>();
 
     public void setUsuarioLogado(Usuario usuario) {
         this.usuarioLogado = usuario;
@@ -54,7 +54,7 @@ public class MainViewController {
         sidebar.setPrefWidth(0);
         sidebar.setMinWidth(0);
         sidebar.setMaxWidth(0);
-        showHome(); // Carrega a lista de imóveis inicialmente
+        showHome();
     }
 
     @FXML
@@ -108,7 +108,7 @@ public class MainViewController {
 
     @FXML
     public void showHome() {
-        // Ao voltar para a home, limpa a busca e os filtros e recarrega a lista
+
         searchTextField.clear();
         currentFilters.clear();
         loadPropertyList(null, null);
@@ -116,13 +116,13 @@ public class MainViewController {
 
     @FXML
     private void showProfile() {
-        loadContent("/homestudy/view/profile-view.fxml");
+        loadContent("/homestudy/view/perfil-view.fxml");
     }
 
     @FXML
     private void showAddProperty() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/proprietario-imovel-register-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/proprietario-imovel-registro-view.fxml"));
             Parent root = loader.load();
             ProprietarioImovelRegisterViewController controller = loader.getController();
             controller.setProprietarioLogado((Proprietario) usuarioLogado, this);
@@ -137,11 +137,11 @@ public class MainViewController {
     @FXML
     private void showPropertySearch() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/property-search-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/imovel-pesquisa-view.fxml"));
             Parent root = loader.load();
-            PropertySearchViewController controller = loader.getController();
-            controller.setMainViewController(this); // Passa a referência do MainViewController
-            controller.setCurrentFilters(currentFilters); // Passa os filtros atuais para preencher a tela de filtro
+            PesquisaImovelViewController controller = loader.getController();
+            controller.setMainViewController(this);
+            controller.setCurrentFilters(currentFilters);
 
             contentArea.getChildren().setAll(root);
         } catch (IOException e) {
@@ -153,7 +153,7 @@ public class MainViewController {
 
     @FXML
     private void showMap() {
-        loadContent("/homestudy/view/map-view.fxml");
+        loadContent("/homestudy/view/mapa-view.fxml");
     }
 
     @FXML
@@ -162,20 +162,20 @@ public class MainViewController {
         loadPropertyList(searchText, currentFilters);
     }
 
-    // Método para aplicar filtros recebidos do PropertySearchViewController
+
     public void applyFilters(Map<String, String> filters) {
-        this.currentFilters = new HashMap<>(filters); // Atualiza os filtros atuais
-        loadPropertyList(searchTextField.getText(), this.currentFilters); // Recarrega a lista com os novos filtros e busca atual
+        this.currentFilters = new HashMap<>(filters);
+        loadPropertyList(searchTextField.getText(), this.currentFilters);
     }
 
-    // Método para carregar a lista de propriedades com busca e filtros
-    public void loadPropertyList(String searchQuery, Map<String, String> filters) { // Tornar public para acesso externo
+
+    public void loadPropertyList(String searchQuery, Map<String, String> filters) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/property-list-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/imovel-lista-view.fxml"));
             Parent root = loader.load();
-            PropertyListViewController controller = loader.getController();
-            controller.setMainViewController(this); // NOVO: Passa a referência do MainViewController
-            controller.loadImoveis(searchQuery, filters); // Chama o método para carregar imóveis com busca e filtro
+            ListaImovelViewController controller = loader.getController();
+            controller.setMainViewController(this);
+            controller.loadImoveis(searchQuery, filters);
 
             contentArea.getChildren().setAll(root);
         } catch (IOException e) {
@@ -185,14 +185,14 @@ public class MainViewController {
         }
     }
 
-    // NOVO MÉTODO: Carrega a tela de detalhes de um imóvel
+
     public void loadPropertyDetail(Imovel imovel) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/property-detail-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/imovel-detalhe-view.fxml"));
             Parent root = loader.load();
-            PropertyDetailViewController controller = loader.getController();
-            controller.setImovel(imovel); // Passa o objeto Imovel para o controlador de detalhes
-            controller.setMainViewController(this); // Passa a referência do MainViewController para o controlador de detalhes
+            DetalhesImovelViewController controller = loader.getController();
+            controller.setImovel(imovel);
+            controller.setMainViewController(this);
 
             contentArea.getChildren().setAll(root);
         } catch (IOException e) {
@@ -208,7 +208,7 @@ public class MainViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            if (loader.getController() instanceof ProfileViewController controller) {
+            if (loader.getController() instanceof PerfilViewController controller) {
                 controller.setUsuario(usuarioLogado);
             }
 
@@ -220,7 +220,7 @@ public class MainViewController {
         }
     }
 
-    // Novos métodos getters para acesso do PropertySearchViewController
+
     public TextField getSearchTextField() {
         return searchTextField;
     }

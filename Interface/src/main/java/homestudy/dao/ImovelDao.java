@@ -1,59 +1,148 @@
 package homestudy.dao;
 
 import homestudy.model.Imovel;
+import homestudy.util.Conexao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImovelDao {
 
-    private final List<Imovel> listaImoveis;
-
     public ImovelDao() {
-        this.listaImoveis = new ArrayList<>();
+        // Construtor vazio, não precisa mais da lista em memória
     }
 
-    public void cadastrar(Imovel imovel) {
-        if (imovel != null) {
-            listaImoveis.add(imovel);
-            System.out.println("Imóvel '" + imovel.getNomeImovel() + "' cadastrado com sucesso!");
-        } else {
-            System.out.println("Erro: Não é possível cadastrar um imóvel vazio.");
+    public int cadastrar(Imovel imovel) {
+        String sql = "INSERT INTO imovel (proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel) VALUES (?, ?, ?, ?, ?)";
+        int generatedId = -1;
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, imovel.getProprietarioId());
+            stmt.setString(2, imovel.getNomeImovel());
+            stmt.setString(3, imovel.getEndereco());
+            stmt.setString(4, imovel.getInformacaoImovel());
+            stmt.setDouble(5, Double.parseDouble(imovel.getValorImovel())); // Converte String para Double
+
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                    imovel.setId(generatedId); // Define o ID gerado no objeto Imovel
+                }
+            }
+            System.out.println("Imóvel '" + imovel.getNomeImovel() + "' cadastrado com sucesso no banco de dados!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao cadastrar imóvel no banco de dados", e);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro de formato no valor do imóvel", e);
         }
+        return generatedId;
     }
 
     public List<Imovel> listarTodos() {
+        List<Imovel> listaImoveis = new ArrayList<>();
+        String sql = "SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel FROM imovel";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Imovel imovel = new Imovel(
+                        rs.getInt("id"),
+                        rs.getInt("proprietario_id"),
+                        rs.getString("nome_imovel"),
+                        rs.getString("endereco"),
+                        rs.getString("informacao_imovel"),
+                        String.valueOf(rs.getDouble("valor_imovel")) // Converte Double para String
+                );
+                listaImoveis.add(imovel);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar imóveis do banco de dados", e);
+        }
         return listaImoveis;
     }
 
     public Imovel buscarPorNome(String nome) {
-        for (Imovel imovel : listaImoveis) {
-            if (imovel.getNomeImovel().equalsIgnoreCase(nome)) {
-                return imovel;
+        String sql = "SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel FROM imovel WHERE nome_imovel = ?";
+        Imovel imovel = null;
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    imovel = new Imovel(
+                            rs.getInt("id"),
+                            rs.getInt("proprietario_id"),
+                            rs.getString("nome_imovel"),
+                            rs.getString("endereco"),
+                            rs.getString("informacao_imovel"),
+                            String.valueOf(rs.getDouble("valor_imovel"))
+                    );
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar imóvel por nome no banco de dados", e);
         }
-        return null;
+        return imovel;
     }
 
-    public boolean atualizar(String nomeAntigo, Imovel imovelAtualizado) {
-        for (int i = 0; i < listaImoveis.size(); i++) {
-            if (listaImoveis.get(i).getNomeImovel().equalsIgnoreCase(nomeAntigo)) {
-                listaImoveis.set(i, imovelAtualizado);
-                System.out.println("Imóvel atualizado com sucesso!");
+    public boolean atualizar(Imovel imovel) {
+        String sql = "UPDATE imovel SET proprietario_id=?, nome_imovel=?, endereco=?, informacao_imovel=?, valor_imovel=? WHERE id=?";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, imovel.getProprietarioId());
+            stmt.setString(2, imovel.getNomeImovel());
+            stmt.setString(3, imovel.getEndereco());
+            stmt.setString(4, imovel.getInformacaoImovel());
+            stmt.setDouble(5, Double.parseDouble(imovel.getValorImovel()));
+            stmt.setInt(6, imovel.getId());
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Imóvel atualizado com sucesso no banco de dados!");
                 return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar imóvel no banco de dados", e);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro de formato no valor do imóvel ao atualizar", e);
         }
-        System.out.println("Erro: Imóvel com o nome '" + nomeAntigo + "' não encontrado para atualização.");
+        System.out.println("Erro: Imóvel com o ID '" + imovel.getId() + "' não encontrado para atualização.");
         return false;
     }
 
-    public boolean remover(String nome) {
-        Imovel imovelEncontrado = buscarPorNome(nome);
-        if (imovelEncontrado != null) {
-            listaImoveis.remove(imovelEncontrado);
-            System.out.println("Imóvel removido com sucesso!");
-            return true;
+    public boolean remover(int id) {
+        String sql = "DELETE FROM imovel WHERE id=?";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Imóvel removido com sucesso do banco de dados!");
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao remover imóvel do banco de dados", e);
         }
-        System.out.println("Erro: Imóvel não encontrado para exclusão.");
+        System.out.println("Erro: Imóvel com o ID '" + id + "' não encontrado para exclusão.");
         return false;
     }
 }

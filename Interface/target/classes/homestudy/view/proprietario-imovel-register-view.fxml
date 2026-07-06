@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="homestudy.view.ProprietarioImovelRegisterViewController">
+    <padding>
+        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+    </padding>
+
+    <Label text="Cadastro de Imóvel (2/2)">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Label>
+
+    <VBox spacing="5.0">
+        <Label text="Nome do Imóvel:" />
+        <TextField fx:id="nomeImovelField" promptText="Ex: Apartamento Centro, Casa Estudantil" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="Endereço:" />
+        <TextField fx:id="enderecoField" promptText="Rua, Número, Bairro, Cidade" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="Informações Adicionais do Imóvel:" />
+        <TextArea fx:id="informacaoImovelArea" promptText="Ex: 3 quartos, mobiliado, próximo à universidade..." wrapText="true" />
+    </VBox>
+
+    <VBox spacing="5.0">
+        <Label text="Valor do Aluguel (R$):" />
+        <TextField fx:id="valorImovelField" promptText="Ex: 1500.00" />
+    </VBox>
+
+    <Button text="Finalizar Cadastro" onAction="#handleFinishRegister" maxWidth="Infinity" defaultButton="true"/>
+    <Button text="Voltar" onAction="#handleBackButton" maxWidth="Infinity"/>
+
+    <Label fx:id="labelMensagem" textFill="RED" wrapText="true" />
+
+</VBox>

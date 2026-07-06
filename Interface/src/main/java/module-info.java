@@ -3,13 +3,12 @@ module homestudy {
     requires javafx.fxml;
     requires java.sql;
 
-    opens homestudy to javafx.fxml;
-    opens homestudy.controller to javafx.fxml;
-
-
     opens homestudy.app to javafx.fxml;
+    opens homestudy.controller to javafx.fxml;
+    opens homestudy.view to javafx.fxml;
 
-    exports homestudy;
-    exports homestudy.controller;
     exports homestudy.app;
+    exports homestudy.controller;
+    exports homestudy.view;
+    exports homestudy;
 }

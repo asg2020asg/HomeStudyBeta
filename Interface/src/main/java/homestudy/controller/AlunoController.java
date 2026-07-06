@@ -4,7 +4,7 @@ import homestudy.dao.AlunoDao;
 import homestudy.dao.ImovelDao;
 import homestudy.model.Aluno;
 import homestudy.model.Imovel;
-import homestudy.util.Conexao;
+
 
 import java.util.Date;
 import java.util.List;
@@ -15,31 +15,29 @@ public class AlunoController {
     private final ImovelDao imovelDao;
 
     public AlunoController() {
-        this.alunoDao = new AlunoDao(Conexao.getConnection());
+
+        this.alunoDao = new AlunoDao(); // CORRIGIDO: Não passa mais Conexao.getConnection()
         this.imovelDao = new ImovelDao();
     }
 
 
     public void cadastrarAluno(String nome, String email, String telefone, String senha, Date dataNascimento, String curso, String periodo) {
 
-        // Validação de segurança (Regras de Negócio)
+
         if (nome == null || nome.trim().isEmpty() || email == null || email.trim().isEmpty() || curso == null || curso.trim().isEmpty()) {
             System.out.println("[ERRO] Nome, E-mail e Curso são obrigatórios!");
             return;
         }
 
         try {
-
             Aluno novoAluno = new Aluno(nome, email, telefone, senha, dataNascimento, curso, periodo);
-
             alunoDao.inserir(novoAluno);
-
             System.out.println("[SUCESSO] Aluno '" + nome + "' foi gravado no banco de dados!");
-
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println("[ERRO CRÍTICO] Falha ao tentar salvar o aluno no MySQL: " + e.getMessage());
         }
     }
+
     public Aluno buscarAlunoPorEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             System.out.println("[ERRO] Informe um e-mail válido para a busca!");
@@ -55,7 +53,8 @@ public class AlunoController {
                 System.out.println("[AVISO] Nenhum aluno encontrado com o e-mail: " + email);
                 return null;
             }
-        } catch (Exception e) {
+
+        } catch (RuntimeException e) {
             System.out.println("[ERRO] Falha ao buscar aluno por e-mail: " + e.getMessage());
             return null;
         }
@@ -64,7 +63,7 @@ public class AlunoController {
     public List<Aluno> listarTodosAlunos() {
         try {
             return alunoDao.listarTodos();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println("[ERRO] Não foi possível listar os alunos: " + e.getMessage());
             return null;
         }
@@ -79,7 +78,7 @@ public class AlunoController {
         try {
             alunoDao.atualizar(aluno);
             System.out.println("[SUCESSO] Dados do aluno '" + aluno.getNome() + "' atualizados com sucesso!");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println("[ERRO] Falha ao atualizar aluno: " + e.getMessage());
         }
     }
@@ -93,18 +92,20 @@ public class AlunoController {
         try {
             alunoDao.excluir(email);
             System.out.println("[SUCESSO] Comando de exclusão enviado para o e-mail: " + email);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println("[ERRO] Falha ao tentar excluir a conta: " + e.getMessage());
         }
     }
+
     public List<Imovel> buscarImoveisDisponiveis() {
         try {
             return imovelDao.listarTodos();
-        } catch (Exception e) {
+        } catch (RuntimeException e) { // Captura a RuntimeException lançada pelo DAO
             System.out.println("[ERRO] Não foi possível carregar a lista de imóveis: " + e.getMessage());
             return null;
         }
     }
+
     public void exibirImoveisNoConsole() {
         List<Imovel> imoveis = buscarImoveisDisponiveis();
 

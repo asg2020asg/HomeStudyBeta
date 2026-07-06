@@ -9,11 +9,12 @@ import java.util.List;
 
 public class UsuarioDao {
     //metodos
-    public void inserir(Usuario usuario){
-        String sql = "INSERT INTO usuario(nome,email,telefone,senha,dataNscimento) VALUES(?,?,?,?,?)";
-        try{
-            Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+    public int inserir(Usuario usuario){ // Alterado para retornar int (o ID gerado)
+        String sql = "INSERT INTO usuario(nome,email,telefone,senha,data_nascimento) VALUES(?,?,?,?,?)"; // Corrigido data_nascimento
+        int generatedId = -1;
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { // Adicionado RETURN_GENERATED_KEYS
+
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -21,18 +22,28 @@ public class UsuarioDao {
             stmt.setDate(5,new Date(usuario.getDataNascimento().getTime()));
 
             stmt.executeUpdate();
-            stmt.close();
-            conn.close();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                    System.out.println("DEBUG UsuarioDao: ID gerado para o usuário " + usuario.getEmail() + ": " + generatedId); // DEBUG
+                } else {
+                    System.out.println("DEBUG UsuarioDao: Nenhum ID gerado para o usuário " + usuario.getEmail()); // DEBUG
+                }
+            }
         }
         catch(SQLException e){
             e.printStackTrace();
+            throw new RuntimeException("Erro ao inserir usuário", e); // Lançar exceção para tratamento superior
         }
+        return generatedId;
     }
+
     public void atualizar(Usuario usuario){
-        String sql = "UPDATE usuario SET"+"nome=?"+"email=?"+"telefone=?"+"senha=?"+"dataNascimento=?"+"WHERE id=?";
-        try{
-            Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        String sql = "UPDATE usuario SET nome=?, email=?, telefone=?, senha=?, data_nascimento=? WHERE id=?"; // Corrigido data_nascimento
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1,usuario.getNome());
             stmt.setString(2,usuario.getEmail());
             stmt.setString(3,usuario.getTelefone());
@@ -41,80 +52,94 @@ public class UsuarioDao {
             stmt.setInt(6,usuario.getId());
 
             stmt.executeUpdate();
-            stmt.close();
-            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar usuário", e);
         }
     }
-    public Usuario buscarPorid(int id) {
+
+    public Usuario buscarPorId(int id) { // Corrigido nome do método para buscarPorId
         String sql = "SELECT * FROM usuario WHERE id=?";
-        try {
-            Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        Usuario usuario = null;
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuario(rs.getString("nome"),
+                            rs.getString("email"),
+                            rs.getString("telefone"),
+                            rs.getString("senha"),
+                            rs.getDate("data_nascimento")); // Corrigido data_nascimento
+
+                    usuario.setId(rs.getInt("id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar usuário por ID", e);
+        }
+        return usuario;
+    }
+
+    public Usuario buscarPorEmail(String email) { // Novo método para buscar por email
+        String sql = "SELECT * FROM usuario WHERE email=?";
+        Usuario usuario = null;
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuario(rs.getString("nome"),
+                            rs.getString("email"),
+                            rs.getString("telefone"),
+                            rs.getString("senha"),
+                            rs.getDate("data_nascimento")); // Corrigido data_nascimento
+
+                    usuario.setId(rs.getInt("id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar usuário por email", e);
+        }
+        return usuario;
+    }
+
+    public List<Usuario> listarTodos(){
+        String sql= "SELECT * FROM usuario";
+        List<Usuario> usuarios = new ArrayList<>(); // Renomeado para 'usuarios' para clareza
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+
+            while(rs.next()){
                 Usuario usuario = new Usuario(rs.getString("nome"),
                         rs.getString("email"),
                         rs.getString("telefone"),
                         rs.getString("senha"),
-                        rs.getDate("DataNascimento"));
-
-                usuario.setId(rs.getInt("id"));
-
-                rs.close();
-                stmt.close();
-                conn.close();
-
-                return usuario;
-            }
-            rs.close();
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    public List<Usuario> listarTodos(){
-        String sql= "SELECT * FROM usuario";
-        List<Usuario> usuario = new ArrayList<>();
-        try{
-            Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
-                Usuario usuarios = new Usuario(rs.getString("nome"),
-                        rs.getString("email"),
-                        rs.getString("telefone"),
-                        rs.getString("senha"),
-                        rs.getDate("DataNascimento")
+                        rs.getDate("data_nascimento") // Corrigido data_nascimento
                 );
-
-                usuarios.setId(rs.getInt("id"));
-                usuario.add(usuarios);
+                usuario.setId(rs.getInt("id"));
+                usuarios.add(usuario);
             }
-            rs.close();
-            stmt.close();
-            conn.close();
         }catch(SQLException e){
             e.printStackTrace();
+            throw new RuntimeException("Erro ao listar usuários", e);
         }
-        return usuario;
+        return usuarios;
     }
+
     public void excluir(int id){
         String sql = "DELETE FROM usuario WHERE id= ?";
-        try{
-            Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        try(Connection conn = Conexao.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1,id);
             stmt.executeUpdate();
-            stmt.close();
-            conn.close();
         }
         catch(SQLException e){
             e.printStackTrace();
+            throw new RuntimeException("Erro ao excluir usuário", e);
         }
     }
 }

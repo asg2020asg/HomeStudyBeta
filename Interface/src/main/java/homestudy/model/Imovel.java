@@ -10,6 +10,7 @@ public class Imovel {
     private String valorImovel;
     private String tipoImovel; // NOVO CAMPO: Tipo do imóvel
 
+
     // Construtor original (útil para criar um Imovel antes de ter um ID ou proprietarioId)
     public Imovel(String nomeImovel, String endereco, String informacaoImovel, String valorImovel, String tipoImovel) {
         this.nomeImovel = nomeImovel;

@@ -3,6 +3,7 @@ package homestudy.view;
 import homestudy.app.GerenciadorTelas;
 import homestudy.model.Imovel; // Importar Imovel
 import homestudy.model.Usuario;
+import homestudy.model.Proprietario;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -13,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ public class MainViewController {
     @FXML private VBox sidebar;
     @FXML private StackPane contentArea;
     @FXML private Button profileButton;
+    @FXML private Button addPropertyButton;
     @FXML private Button mapButton;
     @FXML private TextField searchTextField; // Adicionado fx:id para o campo de busca
 
@@ -36,6 +39,13 @@ public class MainViewController {
         this.usuarioLogado = usuario;
         if (usuario != null) {
             System.out.println("Usuario logado na MainViewController: " + usuario.getNome());
+            if (usuario instanceof Proprietario) {
+                addPropertyButton.setVisible(true);
+                addPropertyButton.setManaged(true);
+            } else {
+                addPropertyButton.setVisible(false);
+                addPropertyButton.setManaged(false);
+            }
         }
     }
 
@@ -97,7 +107,7 @@ public class MainViewController {
     }
 
     @FXML
-    private void showHome() {
+    public void showHome() {
         // Ao voltar para a home, limpa a busca e os filtros e recarrega a lista
         searchTextField.clear();
         currentFilters.clear();
@@ -107,6 +117,21 @@ public class MainViewController {
     @FXML
     private void showProfile() {
         loadContent("/homestudy/view/profile-view.fxml");
+    }
+
+    @FXML
+    private void showAddProperty() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/proprietario-imovel-register-view.fxml"));
+            Parent root = loader.load();
+            ProprietarioImovelRegisterViewController controller = loader.getController();
+            controller.setProprietarioLogado((Proprietario) usuarioLogado, this);
+            contentArea.getChildren().setAll(root);
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar a tela de cadastro de imóvel: " + e.getMessage());
+            e.printStackTrace();
+            GerenciadorTelas.exibirAlerta("Erro", "Não foi possível carregar a tela de cadastro de imóvel: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -202,5 +227,11 @@ public class MainViewController {
 
     public Map<String, String> getCurrentFilters() {
         return currentFilters;
+    }
+
+    @FXML
+    private void handleLogout() {
+        Stage stage = (Stage) contentArea.getScene().getWindow();
+        GerenciadorTelas.mudarTela(stage, "/homestudy/view/login-view.fxml", "Login HomeStudy");
     }
 }

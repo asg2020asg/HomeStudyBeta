@@ -3,6 +3,7 @@ package homestudy.view;
 import homestudy.app.GerenciadorTelas;
 import homestudy.controller.UsuarioController;
 import homestudy.model.Usuario; // Importar a classe Usuario
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader; // Importar FXMLLoader
 import javafx.scene.Parent; // Importar Parent
@@ -41,10 +42,16 @@ public class LoginViewController {
                 MainViewController mainController = loader.getController();
                 mainController.setUsuarioLogado(usuarioLogado); // Passa o usuário logado para o MainViewController
 
-                Scene scene = new Scene(root);
+                Scene scene;
+                if (stage.getWidth() > 0 && stage.getHeight() > 0) {
+                    scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                } else {
+                    scene = new Scene(root);
+                }
                 stage.setTitle("HomeStudy Beta - " + usuarioLogado.getNome()); // Define o título com o nome do usuário
                 stage.setScene(scene);
                 stage.show();
+                Platform.runLater(() -> stage.setMaximized(true)); // Garante que a tela principal abra maximizada
             } catch (IOException e) {
                 exibirAlerta("Erro", "Não foi possível carregar a tela principal: " + e.getMessage());
                 e.printStackTrace();

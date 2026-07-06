@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS imovel (
     proprietario_id INT NOT NULL,
     nome_imovel VARCHAR(100) NOT NULL,
     endereco VARCHAR(255) NOT NULL,
+    bairro VARCHAR(100), -- Adicionado aqui
     tipo_imovel VARCHAR(50), -- Adicionado aqui
     informacao_imovel TEXT,
     valor_imovel DECIMAL(10, 2) NOT NULL,

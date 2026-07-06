@@ -1,5 +1,6 @@
 package homestudy.app;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -33,12 +34,17 @@ public class GerenciadorTelas {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(GerenciadorTelas.class.getResource(fxmlPath));
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
+            Scene scene;
+            if (stage.getScene() != null && stage.getWidth() > 0 && stage.getHeight() > 0) {
+                scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            } else {
+                scene = new Scene(root);
+            }
             stage.setTitle(title);
             stage.setScene(scene);
             
-            // A maximização é definida uma vez no HelloApplication e deve persistir.
-            // Remover a lógica de setMaximized(false/true) aqui para evitar piscadas.
+            // Garante que a tela permaneça maximizada executando após o ciclo de layout
+            Platform.runLater(() -> stage.setMaximized(true));
             // stage.setResizable(true) também é definido uma vez no HelloApplication.
             
             // stage.show() não é chamado aqui, pois o Stage já deve estar visível.

@@ -57,6 +57,8 @@
                     <Button fx:id="mapButton" mnemonicParsing="false" onAction="#showMap" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Radar" />
                     <!-- REMOVIDO: Botão de Filtros da sidebar, pois já existe na parte superior -->
                     <Button fx:id="profileButton" mnemonicParsing="false" onAction="#showProfile" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Perfil" />
+                    <Button fx:id="addPropertyButton" mnemonicParsing="false" onAction="#showAddProperty" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Adicionar Imóvel" managed="false" visible="false" />
+                    <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Sair" />
                 </VBox>
             </children>
         </VBox>

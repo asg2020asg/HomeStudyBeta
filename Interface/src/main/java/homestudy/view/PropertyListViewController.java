@@ -36,14 +36,8 @@ public class PropertyListViewController {
         List<Imovel> imoveis = new ArrayList<>();
         try {
             imoveis = new ImovelDao().listarComFiltro(searchQuery, filters);
-            if (imoveis.isEmpty()) {
-                // Se não encontrar no banco, tenta carregar exemplos
-                imoveis = criarImoveisExemplo();
-            }
         } catch (RuntimeException e) {
             System.err.println("Nao foi possivel carregar imoveis do banco: " + e.getMessage());
-            // Em caso de erro no banco, carrega exemplos
-            imoveis = criarImoveisExemplo();
         }
 
         propertyContainer.getChildren().clear(); // Limpa os cards existentes
@@ -57,16 +51,6 @@ public class PropertyListViewController {
                 propertyContainer.getChildren().add(criarCard(imovel));
             }
         }
-    }
-
-    private List<Imovel> criarImoveisExemplo() {
-        List<Imovel> exemplo = new ArrayList<>();
-        // Adicionando o tipoImovel aos exemplos
-        exemplo.add(new Imovel("Casa Estudantil", "Morada Nova", "2 quartos, perto da universidade", "850.00", "Casa"));
-        exemplo.add(new Imovel("Apartamento Centro", "Centro", "Mobiliado, internet inclusa", "1100.00", "Apartamento"));
-        exemplo.add(new Imovel("Kitnet Individual", "Bairro Universitario", "Ambiente compacto para estudante", "750.00", "Kitnet"));
-        exemplo.add(new Imovel("Republica Compartilhada", "Morada Nova", "Quarto individual em casa compartilhada", "650.00", "Republica"));
-        return exemplo;
     }
 
     private VBox criarCard(Imovel imovel) {

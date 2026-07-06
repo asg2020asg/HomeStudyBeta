@@ -32,7 +32,7 @@
         </Label>
     </HBox>
 
-    <Label text="Cadastro de Imovel (2/2)" style="-fx-text-fill: #222;">
+    <Label fx:id="tituloLabel" text="Cadastro de Imovel (2/2)" style="-fx-text-fill: #222;">
         <font>
             <Font name="System Bold" size="28.0" />
         </font>
@@ -67,7 +67,7 @@
     </GridPane>
 
     <HBox alignment="CENTER" spacing="14.0" style="-fx-padding: 10 0 0 0;">
-        <Button text="Finalizar Cadastro" onAction="#handleFinishRegister" prefHeight="42.0" prefWidth="180.0" defaultButton="true" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button fx:id="btnFinalizar" text="Finalizar Cadastro" onAction="#handleFinishRegister" prefHeight="42.0" prefWidth="180.0" defaultButton="true" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;"/>
         <Button text="Voltar" onAction="#handleBackButton" prefHeight="42.0" prefWidth="160.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-text-fill: #333; -fx-font-weight: bold;"/>
     </HBox>
 

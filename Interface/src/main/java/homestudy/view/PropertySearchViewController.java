@@ -80,12 +80,6 @@ public class PropertySearchViewController {
             System.err.println("Erro ao carregar bairros do banco de dados: " + e.getMessage());
         }
 
-        if (bairros.isEmpty()) {
-            // Adiciona alguns bairros de exemplo se o banco estiver vazio ou houver erro
-            bairros.add("Morada Nova");
-            bairros.add("Centro");
-            bairros.add("Bairro Universitario");
-        }
         bairroComboBox.setItems(FXCollections.observableArrayList(bairros));
     }
 

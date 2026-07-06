@@ -67,6 +67,52 @@ public class ProprietarioDao {
         }
     }
 
+    public Proprietario buscarPorId(int id) {
+        Connection conn = null;
+        try {
+            conn = Conexao.getConnection();
+            // Primeiro, busca os dados de usuário
+            Usuario usuario = usuarioDao.buscarPorId(id);
+
+            if (usuario == null) {
+                return null; // Usuário não encontrado
+            }
+
+            // Verifica se este usuário é um proprietário
+            String sqlProprietario = "SELECT usuario_id FROM proprietario WHERE usuario_id = ?";
+            try (PreparedStatement stmtProprietario = conn.prepareStatement(sqlProprietario)) {
+                stmtProprietario.setInt(1, id);
+                try (ResultSet rsProprietario = stmtProprietario.executeQuery()) {
+                    if (rsProprietario.next()) {
+                        // Se for um proprietário, cria o objeto Proprietario com os dados do usuário
+                        Proprietario proprietario = new Proprietario(
+                                usuario.getNome(),
+                                usuario.getEmail(),
+                                usuario.getTelefone(),
+                                usuario.getSenha(),
+                                usuario.getDataNascimento()
+                        );
+                        proprietario.setId(usuario.getId());
+                        return proprietario;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar proprietário por ID", e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.err.println("Erro ao fechar conexão: " + e.getMessage());
+                }
+            }
+        }
+        return null; // Não é um proprietário ou não encontrado
+    }
+
+
     public Proprietario buscarPorEmail(String email) {
         Connection conn = null;
         try {

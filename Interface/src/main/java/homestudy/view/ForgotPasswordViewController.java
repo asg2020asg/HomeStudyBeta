@@ -2,11 +2,13 @@ package homestudy.view;
 
 import homestudy.app.GerenciadorTelas;
 import homestudy.controller.UsuarioController;
+import homestudy.model.Usuario;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.control.PasswordField; // Importar PasswordField
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,50 +18,113 @@ public class ForgotPasswordViewController {
 
     @FXML private TextField emailField;
     @FXML private TextField dataNascimentoField;
+    @FXML private PasswordField novaSenhaField; // NOVO
+    @FXML private PasswordField repetirSenhaField; // NOVO
     @FXML private Label labelMensagem;
 
     private UsuarioController usuarioController = new UsuarioController();
 
     @FXML
-    private void handleResetPassword() {
+    public void initialize() {
+        // Máscara para Data de Nascimento: DD/MM/AAAA
+        dataNascimentoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String cleanValue = newValue.replaceAll("[^\\d]", ""); // Remove tudo que não for dígito
+            StringBuilder formattedValue = new StringBuilder();
+
+            if (cleanValue.length() > 0) {
+                if (cleanValue.length() > 2) {
+                    formattedValue.append(cleanValue.substring(0, 2)).append("/");
+                    if (cleanValue.length() > 4) {
+                        formattedValue.append(cleanValue.substring(2, 4)).append("/");
+                        formattedValue.append(cleanValue.substring(4, Math.min(cleanValue.length(), 8)));
+                    } else {
+                        formattedValue.append(cleanValue.substring(2, Math.min(cleanValue.length(), 4)));
+                    }
+                } else {
+                    formattedValue.append(cleanValue);
+                }
+            }
+
+            // Limita o tamanho máximo da entrada (8 dígitos + 2 barras)
+            if (formattedValue.length() > 10) { // DD/MM/AAAA -> 10 caracteres
+                formattedValue.setLength(10);
+            }
+
+            // Evita loop infinito
+            if (!newValue.equals(formattedValue.toString())) {
+                dataNascimentoField.setText(formattedValue.toString());
+                // Mantém o cursor no final
+                dataNascimentoField.positionCaret(formattedValue.length());
+            }
+        });
+    }
+
+    @FXML
+    private void handleResetPassword() { // Renomeado de handleConfirm
         String email = emailField.getText();
         String dataNascimentoStr = dataNascimentoField.getText();
+        String novaSenha = novaSenhaField.getText(); // NOVO
+        String repetirSenha = repetirSenhaField.getText(); // NOVO
 
+        // 1. Validação inicial dos campos de verificação
         if (email.isEmpty() || dataNascimentoStr.isEmpty()) {
-            exibirAlerta("Aviso", "Por favor, preencha todos os campos.");
+            GerenciadorTelas.exibirAlerta("Aviso", "Por favor, preencha o e-mail e a data de nascimento.");
             return;
         }
+
+        // Validação e parse da data de nascimento
+        String dataNascimentoClean = dataNascimentoStr.replaceAll("[^\\d]", "");
+        if (dataNascimentoClean.length() != 8) {
+            GerenciadorTelas.exibirAlerta("Erro de Formato", "Data de nascimento incompleta. Use DD/MM/AAAA.");
+            return;
+        }
+        dataNascimentoStr = dataNascimentoClean.substring(0,2) + "/" + dataNascimentoClean.substring(2,4) + "/" + dataNascimentoClean.substring(4,8);
 
         Date dataNascimento = null;
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            formatter.setLenient(false);
             dataNascimento = formatter.parse(dataNascimentoStr);
         } catch (ParseException e) {
-            exibirAlerta("Erro de Formato", "Formato de data inválido. Use DD/MM/AAAA.");
+            GerenciadorTelas.exibirAlerta("Erro de Formato", "Formato de data inválido. Use DD/MM/AAAA.");
             return;
         }
 
-        // TODO: Implementar a lógica de redefinição de senha no UsuarioController
-        // Por enquanto, apenas um placeholder
-        // if (usuarioController.verificarDadosParaRedefinirSenha(email, dataNascimento)) {
-        //     exibirAlerta("Sucesso", "Um link para redefinição de senha foi enviado para o seu e-mail.");
-        // } else {
-        //     exibirAlerta("Erro", "E-mail ou data de nascimento incorretos.");
-        // }
-        exibirAlerta("Funcionalidade em Desenvolvimento", "A redefinição de senha ainda não está implementada.");
+        // 2. Verificar e-mail e data de nascimento no banco de dados
+        Usuario usuarioVerificado = usuarioController.verificarEmailDataNascimento(email, dataNascimento);
+
+        if (usuarioVerificado == null) {
+            GerenciadorTelas.exibirAlerta("Erro de Verificação", "E-mail ou data de nascimento incorretos. A senha não será redefinida.");
+            return; // Interrompe se a verificação falhar
+        }
+
+        // 3. Se a verificação for bem-sucedida, validar os campos da nova senha
+        if (novaSenha.isEmpty() || repetirSenha.isEmpty()) {
+            GerenciadorTelas.exibirAlerta("Aviso", "Por favor, preencha os campos de 'Nova Senha' e 'Repetir Nova Senha'.");
+            return;
+        }
+
+        if (!novaSenha.equals(repetirSenha)) {
+            GerenciadorTelas.exibirAlerta("Erro", "As senhas não coincidem. Por favor, digite novamente.");
+            return;
+        }
+
+        // 4. Se tudo estiver correto, atualizar a senha
+        boolean sucesso = usuarioController.atualizarSenha(email, novaSenha);
+
+        if (sucesso) {
+            GerenciadorTelas.exibirAlerta("Sucesso", "Sua senha foi redefinida com sucesso! Faça login com a nova senha.");
+            // Redireciona para a tela de login
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            GerenciadorTelas.mudarTela(stage, "/homestudy/view/login-view.fxml", "Login HomeStudy");
+        } else {
+            GerenciadorTelas.exibirAlerta("Erro", "Não foi possível redefinir a senha. Tente novamente.");
+        }
     }
 
     @FXML
     private void handleBackButton() {
         Stage stage = (Stage) emailField.getScene().getWindow();
         GerenciadorTelas.mudarTela(stage, "/homestudy/view/login-view.fxml", "Login HomeStudy");
-    }
-
-    private void exibirAlerta(String titulo, String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
     }
 }

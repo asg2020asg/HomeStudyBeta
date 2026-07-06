@@ -58,6 +58,27 @@ public class UsuarioDao {
         }
     }
 
+    /**
+     * Atualiza apenas a senha de um usuário no banco de dados.
+     * @param userId O ID do usuário a ser atualizado.
+     * @param novaSenha A nova senha a ser definida.
+     * @return true se a senha foi atualizada com sucesso, false caso contrário.
+     */
+    public boolean atualizarSenha(int userId, String novaSenha) {
+        String sql = "UPDATE usuario SET senha=? WHERE id=?";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, novaSenha);
+            stmt.setInt(2, userId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar senha do usuário com ID " + userId, e);
+        }
+    }
+
+
     public Usuario buscarPorId(int id) { // Corrigido nome do método para buscarPorId
         String sql = "SELECT * FROM usuario WHERE id=?";
         Usuario usuario = null;

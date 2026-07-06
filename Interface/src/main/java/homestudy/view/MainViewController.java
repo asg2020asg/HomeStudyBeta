@@ -1,6 +1,7 @@
 package homestudy.view;
 
 import homestudy.app.GerenciadorTelas;
+import homestudy.model.Imovel; // Importar Imovel
 import homestudy.model.Usuario;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -148,6 +149,7 @@ public class MainViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/property-list-view.fxml"));
             Parent root = loader.load();
             PropertyListViewController controller = loader.getController();
+            controller.setMainViewController(this); // NOVO: Passa a referência do MainViewController
             controller.loadImoveis(searchQuery, filters); // Chama o método para carregar imóveis com busca e filtro
 
             contentArea.getChildren().setAll(root);
@@ -157,6 +159,24 @@ public class MainViewController {
             GerenciadorTelas.exibirAlerta("Erro", "Nao foi possivel carregar a lista de imoveis. " + e.getMessage());
         }
     }
+
+    // NOVO MÉTODO: Carrega a tela de detalhes de um imóvel
+    public void loadPropertyDetail(Imovel imovel) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/homestudy/view/property-detail-view.fxml"));
+            Parent root = loader.load();
+            PropertyDetailViewController controller = loader.getController();
+            controller.setImovel(imovel); // Passa o objeto Imovel para o controlador de detalhes
+            controller.setMainViewController(this); // Passa a referência do MainViewController para o controlador de detalhes
+
+            contentArea.getChildren().setAll(root);
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar a tela de detalhes do imóvel: " + e.getMessage());
+            e.printStackTrace();
+            GerenciadorTelas.exibirAlerta("Erro", "Nao foi possivel carregar os detalhes do imovel. " + e.getMessage());
+        }
+    }
+
 
     private void loadContent(String fxmlPath) {
         try {

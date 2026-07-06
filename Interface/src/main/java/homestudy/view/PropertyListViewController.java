@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent; // Import para MouseEvent
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,13 @@ import java.util.Map;
 public class PropertyListViewController {
 
     @FXML private FlowPane propertyContainer;
+
+    private MainViewController mainViewController; // Referência para MainViewController
+
+    // Setter para MainViewController
+    public void setMainViewController(MainViewController mainViewController) {
+        this.mainViewController = mainViewController;
+    }
 
     @FXML
     public void initialize() {
@@ -66,6 +74,16 @@ public class PropertyListViewController {
         card.setPrefWidth(240.0);
         card.setMinHeight(190.0);
         card.setStyle("-fx-background-color: white; -fx-border-color: #d6d6d6; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;");
+
+        // Adiciona evento de clique ao card
+        card.setOnMouseClicked(event -> {
+            if (mainViewController != null) {
+                mainViewController.loadPropertyDetail(imovel);
+            } else {
+                System.err.println("MainViewController é nulo. Não foi possível carregar detalhes do imóvel.");
+            }
+        });
+
 
         VBox imageBox = new VBox();
         imageBox.setPrefHeight(82.0);

@@ -6,6 +6,7 @@ import homestudy.model.Proprietario;
 import homestudy.dao.AdministradorDao;
 import homestudy.dao.AlunoDao;
 import homestudy.dao.ProprietarioDao;
+import homestudy.dao.UsuarioDao; // Importar UsuarioDao
 import homestudy.model.Usuario;
 
 import java.util.List;
@@ -16,11 +17,13 @@ public class UsuarioController {
     private AdministradorDao administradorDao;
     private ProprietarioDao proprietarioDao;
     private AlunoDao alunoDao;
+    private UsuarioDao usuarioDao; // Adicionado UsuarioDao
     //construtor
     public UsuarioController(){
         this.administradorDao = new AdministradorDao();
         this.proprietarioDao = new ProprietarioDao();
         this.alunoDao = new AlunoDao();
+        this.usuarioDao = new UsuarioDao(); // Inicializa UsuarioDao
     }
     //metodos
     //login,condição para quem quer entrar
@@ -68,14 +71,59 @@ public class UsuarioController {
         usuarioAtual.excluirDadosPessoa();
         return true;
     }
-    public boolean verificarRecuperacao(String email, Date dataNascimento) {
-        // Esta lógica precisa ser implementada para a redefinição de senha
-        // Você precisaria buscar o usuário pelo email e verificar a data de nascimento
-        // Exemplo:
-        // Usuario usuario = usuarioDao.buscarPorEmail(email);
-        // if (usuario != null && usuario.getDataNascimento().equals(dataNascimento)) {
-        //     return true;
-        // }
-        return false;
+
+    /**
+     * Verifica se o email e a data de nascimento correspondem a um usuário existente.
+     * @param email O email do usuário.
+     * @param dataNascimento A data de nascimento do usuário.
+     * @return O objeto Usuario se a correspondência for encontrada, caso contrário, null.
+     */
+    public Usuario verificarEmailDataNascimento(String email, Date dataNascimento) {
+        // Busca o usuário pelo email na tabela geral de usuários
+        Usuario usuario = usuarioDao.buscarPorEmail(email);
+
+        if (usuario != null && usuario.getDataNascimento().equals(dataNascimento)) {
+            // Se encontrou o usuário e a data de nascimento coincide,
+            // precisamos retornar o tipo específico de usuário (Administrador, Proprietario, Aluno)
+            // para que o fluxo da aplicação possa continuar corretamente.
+            // Isso é importante para o MainViewController, por exemplo, que precisa saber o tipo de usuário logado.
+
+            // Verifica em Administradores
+            for (Administrador adm : administradorDao.listarTodos()) {
+                if (adm.getId() == usuario.getId()) {
+                    return adm;
+                }
+            }
+            // Verifica em Proprietários
+            for (Proprietario prop : proprietarioDao.listarTodos()) {
+                if (prop.getId() == usuario.getId()) {
+                    return prop;
+                }
+            }
+            // Verifica em Alunos
+            for (Aluno aluno : alunoDao.listarTodos()) {
+                if (aluno.getId() == usuario.getId()) {
+                    return aluno;
+                }
+            }
+        }
+        return null; // Nenhuma correspondência encontrada ou data de nascimento incorreta
+    }
+
+    /**
+     * Atualiza a senha de um usuário.
+     * @param email O email do usuário cuja senha será atualizada.
+     * @param novaSenha A nova senha.
+     * @return true se a senha foi atualizada com sucesso, false caso contrário.
+     */
+    public boolean atualizarSenha(String email, String novaSenha) {
+        // Primeiro, encontre o usuário pelo email usando UsuarioDao
+        Usuario usuario = usuarioDao.buscarPorEmail(email);
+
+        if (usuario != null) {
+            // Atualiza a senha diretamente no UsuarioDao
+            return usuarioDao.atualizarSenha(usuario.getId(), novaSenha);
+        }
+        return false; // Usuário não encontrado
     }
 }

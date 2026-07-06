@@ -5,24 +5,23 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="720.0" prefWidth="640.0" spacing="18.0" style="-fx-background-color: white; -fx-border-color: #5d5d5d; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="720.0" prefWidth="640.0" spacing="18.0" style="-fx-background-color: white; -fx-border-color: #5d5d5d; -fx-border-width: 2;" xmlns="http://javafx.com/fxml/1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="homestudy.view.PropertySearchViewController">
     <padding>
         <Insets bottom="28.0" left="28.0" right="28.0" top="24.0"/>
     </padding>
 
     <HBox alignment="CENTER_LEFT" spacing="18.0">
-        <Label text="Filtro por Localizacao" HBox.hgrow="ALWAYS">
+        <Label text="Filtro de Imóveis" HBox.hgrow="ALWAYS">
             <font>
                 <Font name="System Bold" size="22.0" />
             </font>
         </Label>
-        <Button text="Apply" prefHeight="42.0" prefWidth="92.0" style="-fx-background-color: #d92828; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" />
-        <Button text="Cancel" prefHeight="42.0" prefWidth="92.0" style="-fx-background-color: white; -fx-text-fill: #333; -fx-font-size: 16px;" />
+        <!-- Botões Apply e Cancel removidos daqui -->
     </HBox>
 
     <VBox spacing="12.0" style="-fx-border-color: transparent transparent #dedede transparent; -fx-padding: 12 0 20 0;">
@@ -31,20 +30,11 @@
         </Label>
         <HBox alignment="CENTER_LEFT" spacing="18.0">
             <Label prefWidth="150.0" text="Bairro" style="-fx-font-size: 16px;" />
-            <ComboBox prefHeight="40.0" prefWidth="300.0" promptText="Morada Nova" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
+            <ComboBox fx:id="bairroComboBox" prefHeight="40.0" prefWidth="300.0" promptText="Selecione o Bairro" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
         </HBox>
     </VBox>
 
-    <VBox spacing="14.0" style="-fx-border-color: transparent transparent #dedede transparent; -fx-padding: 0 0 20 0;">
-        <Label text="DISTANCIA (BUFFER)" style="-fx-text-fill: #444;">
-            <font><Font name="System Bold" size="16.0" /></font>
-        </Label>
-        <HBox alignment="CENTER_LEFT" spacing="18.0">
-            <Label prefWidth="150.0" text="Raio de busca" style="-fx-font-size: 16px;" />
-            <ComboBox prefHeight="40.0" prefWidth="300.0" promptText="2 km" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
-        </HBox>
-        <Slider value="65.0" style="-fx-accent: #d92828;" />
-    </VBox>
+    <!-- Seção DISTANCIA (BUFFER) removida -->
 
     <VBox spacing="14.0" style="-fx-border-color: transparent transparent #dedede transparent; -fx-padding: 0 0 20 0;">
         <Label text="TIPO DE IMOVEL" style="-fx-text-fill: #444;">
@@ -52,12 +42,12 @@
         </Label>
         <HBox spacing="80.0">
             <VBox spacing="16.0">
-                <CheckBox text="Casa" style="-fx-font-size: 16px;" />
-                <CheckBox text="Kitnet" style="-fx-font-size: 16px;" />
+                <CheckBox fx:id="casaCheckBox" text="Casa" style="-fx-font-size: 16px;" />
+                <CheckBox fx:id="kitnetCheckBox" text="Kitnet" style="-fx-font-size: 16px;" />
             </VBox>
             <VBox spacing="16.0">
-                <CheckBox text="Apartamento" style="-fx-font-size: 16px;" />
-                <CheckBox text="Republica" style="-fx-font-size: 16px;" />
+                <CheckBox fx:id="apartamentoCheckBox" text="Apartamento" style="-fx-font-size: 16px;" />
+                <CheckBox fx:id="republicaCheckBox" text="Republica" style="-fx-font-size: 16px;" />
             </VBox>
         </HBox>
     </VBox>
@@ -68,13 +58,14 @@
         </Label>
         <HBox alignment="CENTER_LEFT" spacing="22.0">
             <Label text="De:" style="-fx-font-size: 16px;" />
-            <ComboBox prefHeight="40.0" prefWidth="190.0" promptText="R$ 500" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
+            <TextField fx:id="precoMinField" prefHeight="40.0" prefWidth="190.0" promptText="Valor Mínimo" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
             <Label text="Ate:" style="-fx-font-size: 16px;" />
-            <ComboBox prefHeight="40.0" prefWidth="190.0" promptText="R$ 1.500" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
+            <TextField fx:id="precoMaxField" prefHeight="40.0" prefWidth="190.0" promptText="Valor Máximo" style="-fx-background-color: white; -fx-border-color: #888; -fx-border-radius: 5;" />
         </HBox>
     </VBox>
 
-    <HBox alignment="CENTER" style="-fx-padding: 18 0 0 0;">
-        <Button text="Aplicar Filtros" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+    <HBox alignment="CENTER" spacing="10.0" style="-fx-padding: 18 0 0 0;">
+        <Button text="Aplicar Filtros" onAction="#handleApplyFilters" prefHeight="52.0" prefWidth="220.0" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Button text="Cancelar" onAction="#handleCancel" prefHeight="52.0" prefWidth="120.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #777; -fx-border-radius: 8; -fx-text-fill: #333; -fx-font-size: 18px; -fx-font-weight: bold;"/>
     </HBox>
 </VBox>

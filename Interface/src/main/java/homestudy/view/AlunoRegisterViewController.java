@@ -27,6 +27,74 @@ public class AlunoRegisterViewController {
     private AlunoController alunoController = new AlunoController();
 
     @FXML
+    public void initialize() {
+        // Máscara para Telefone: (XX) XXXXX-XXXX
+        telefoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String cleanValue = newValue.replaceAll("[^\\d]", ""); // Remove tudo que não for dígito
+            StringBuilder formattedValue = new StringBuilder();
+
+            if (cleanValue.length() > 0) {
+                formattedValue.append("(");
+                if (cleanValue.length() > 2) {
+                    formattedValue.append(cleanValue.substring(0, 2)).append(") ");
+                    if (cleanValue.length() > 7) {
+                        formattedValue.append(cleanValue.substring(2, 7)).append("-");
+                        formattedValue.append(cleanValue.substring(7, Math.min(cleanValue.length(), 11)));
+                    } else {
+                        formattedValue.append(cleanValue.substring(2, Math.min(cleanValue.length(), 7)));
+                    }
+                } else {
+                    formattedValue.append(cleanValue);
+                }
+            }
+
+            // Limita o tamanho máximo da entrada (11 dígitos + caracteres da máscara)
+            if (formattedValue.length() > 15) { // (XX) XXXXX-XXXX -> 15 caracteres
+                formattedValue.setLength(15);
+            }
+
+            // Evita loop infinito
+            if (!newValue.equals(formattedValue.toString())) {
+                telefoneField.setText(formattedValue.toString());
+                // Mantém o cursor no final
+                telefoneField.positionCaret(formattedValue.length());
+            }
+        });
+
+        // Máscara para Data de Nascimento: DD/MM/AAAA
+        dataNascimentoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String cleanValue = newValue.replaceAll("[^\\d]", ""); // Remove tudo que não for dígito
+            StringBuilder formattedValue = new StringBuilder();
+
+            if (cleanValue.length() > 0) {
+                if (cleanValue.length() > 2) {
+                    formattedValue.append(cleanValue.substring(0, 2)).append("/");
+                    if (cleanValue.length() > 4) {
+                        formattedValue.append(cleanValue.substring(2, 4)).append("/");
+                        formattedValue.append(cleanValue.substring(4, Math.min(cleanValue.length(), 8)));
+                    } else {
+                        formattedValue.append(cleanValue.substring(2, Math.min(cleanValue.length(), 4)));
+                    }
+                } else {
+                    formattedValue.append(cleanValue);
+                }
+            }
+
+            // Limita o tamanho máximo da entrada (8 dígitos + 2 barras)
+            if (formattedValue.length() > 10) { // DD/MM/AAAA -> 10 caracteres
+                formattedValue.setLength(10);
+            }
+
+            // Evita loop infinito
+            if (!newValue.equals(formattedValue.toString())) {
+                dataNascimentoField.setText(formattedValue.toString());
+                // Mantém o cursor no final
+                dataNascimentoField.positionCaret(formattedValue.length());
+            }
+        });
+    }
+
+    @FXML
     private void handleRegister() {
         String nome = nomeField.getText();
         String email = emailField.getText();
@@ -45,6 +113,14 @@ public class AlunoRegisterViewController {
             exibirAlerta("Erro de Validação", "Por favor, insira um e-mail válido.");
             return;
         }
+
+        // Remove a máscara antes de tentar fazer o parse da data
+        String dataNascimentoClean = dataNascimentoStr.replaceAll("[^\\d]", "");
+        if (dataNascimentoClean.length() != 8) {
+            exibirAlerta("Erro de Formato", "Data de nascimento incompleta. Use DD/MM/AAAA.");
+            return;
+        }
+        dataNascimentoStr = dataNascimentoClean.substring(0,2) + "/" + dataNascimentoClean.substring(2,4) + "/" + dataNascimentoClean.substring(4,8);
 
         Date dataNascimento = null;
         try {

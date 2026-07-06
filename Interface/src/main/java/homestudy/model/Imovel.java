@@ -8,25 +8,28 @@ public class Imovel {
     private String endereco;
     private String informacaoImovel;
     private String valorImovel;
+    private String tipoImovel; // NOVO CAMPO: Tipo do imóvel
 
     // Construtor original (útil para criar um Imovel antes de ter um ID ou proprietarioId)
-    public Imovel(String nomeImovel, String endereco, String informacaoImovel, String valorImovel) {
+    public Imovel(String nomeImovel, String endereco, String informacaoImovel, String valorImovel, String tipoImovel) {
         this.nomeImovel = nomeImovel;
         this.endereco = endereco;
         this.informacaoImovel = informacaoImovel;
         this.valorImovel = valorImovel;
+        this.tipoImovel = tipoImovel; // Inicializa o novo campo
         this.id = 0; // Valor padrão, será definido após inserção no DB
         this.proprietarioId = 0; // Valor padrão, será definido ao associar
     }
 
     // Novo construtor para quando o Imovel já tem um ID e proprietarioId (ex: ao buscar do DB)
-    public Imovel(int id, int proprietarioId, String nomeImovel, String endereco, String informacaoImovel, String valorImovel) {
+    public Imovel(int id, int proprietarioId, String nomeImovel, String endereco, String informacaoImovel, String valorImovel, String tipoImovel) {
         this.id = id;
         this.proprietarioId = proprietarioId;
         this.nomeImovel = nomeImovel;
         this.endereco = endereco;
         this.informacaoImovel = informacaoImovel;
         this.valorImovel = valorImovel;
+        this.tipoImovel = tipoImovel; // Inicializa o novo campo
     }
 
     // Getters e Setters para os novos campos
@@ -78,6 +81,15 @@ public class Imovel {
         return valorImovel;
     }
 
+    // Getter e Setter para tipoImovel
+    public String getTipoImovel() {
+        return tipoImovel;
+    }
+
+    public void setTipoImovel(String tipoImovel) {
+        this.tipoImovel = tipoImovel;
+    }
+
     //metodos
     public void exibirDadosImovel() {
         System.out.println(" Dados do Imóvel: \n");
@@ -87,13 +99,15 @@ public class Imovel {
         System.out.println("Endereço: " + getEndereco());
         System.out.println("Informação do Imóvel: " + getInformacaoImovel());
         System.out.println("Valor do Imóvel: " + getValorImovel());
+        System.out.println("Tipo do Imóvel: " + getTipoImovel()); // Exibe o novo campo
     }
 
-    public void editarDadosImovel(String nome, String endereco, String informacaoImovel, String valorImovel) {
+    public void editarDadosImovel(String nome, String endereco, String informacaoImovel, String valorImovel, String tipoImovel) {
         this.nomeImovel = nome;
         this.endereco = endereco;
         this.informacaoImovel = informacaoImovel;
         this.valorImovel = valorImovel;
+        this.tipoImovel = tipoImovel; // Permite editar o novo campo
     }
 
     public void excluiDadosImovel() {
@@ -103,5 +117,6 @@ public class Imovel {
         this.endereco = null;
         this.informacaoImovel = null;
         this.valorImovel = null;
+        this.tipoImovel = null; // Limpa o novo campo
     }
 }

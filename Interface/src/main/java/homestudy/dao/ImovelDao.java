@@ -10,15 +10,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ImovelDao {
 
     public ImovelDao() {
-        // Construtor vazio, não precisa mais da lista em memória
+        // Construtor vazio
     }
 
     public int cadastrar(Imovel imovel) {
-        String sql = "INSERT INTO imovel (proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO imovel (proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel, tipo_imovel) VALUES (?, ?, ?, ?, ?, ?)";
         int generatedId = -1;
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -27,14 +28,15 @@ public class ImovelDao {
             stmt.setString(2, imovel.getNomeImovel());
             stmt.setString(3, imovel.getEndereco());
             stmt.setString(4, imovel.getInformacaoImovel());
-            stmt.setDouble(5, Double.parseDouble(imovel.getValorImovel())); // Converte String para Double
+            stmt.setDouble(5, Double.parseDouble(imovel.getValorImovel()));
+            stmt.setString(6, imovel.getTipoImovel()); // Novo campo
 
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     generatedId = rs.getInt(1);
-                    imovel.setId(generatedId); // Define o ID gerado no objeto Imovel
+                    imovel.setId(generatedId);
                 }
             }
             System.out.println("Imóvel '" + imovel.getNomeImovel() + "' cadastrado com sucesso no banco de dados!");
@@ -49,32 +51,11 @@ public class ImovelDao {
     }
 
     public List<Imovel> listarTodos() {
-        List<Imovel> listaImoveis = new ArrayList<>();
-        String sql = "SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel FROM imovel";
-        try (Connection conn = Conexao.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Imovel imovel = new Imovel(
-                        rs.getInt("id"),
-                        rs.getInt("proprietario_id"),
-                        rs.getString("nome_imovel"),
-                        rs.getString("endereco"),
-                        rs.getString("informacao_imovel"),
-                        String.valueOf(rs.getDouble("valor_imovel")) // Converte Double para String
-                );
-                listaImoveis.add(imovel);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao listar imóveis do banco de dados", e);
-        }
-        return listaImoveis;
+        return listarComFiltro(null, null); // Chama o método com filtro sem parâmetros
     }
 
     public Imovel buscarPorNome(String nome) {
-        String sql = "SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel FROM imovel WHERE nome_imovel = ?";
+        String sql = "SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel, tipo_imovel FROM imovel WHERE nome_imovel = ?";
         Imovel imovel = null;
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -88,7 +69,8 @@ public class ImovelDao {
                             rs.getString("nome_imovel"),
                             rs.getString("endereco"),
                             rs.getString("informacao_imovel"),
-                            String.valueOf(rs.getDouble("valor_imovel"))
+                            String.valueOf(rs.getDouble("valor_imovel")),
+                            rs.getString("tipo_imovel") // Novo campo
                     );
                 }
             }
@@ -100,7 +82,7 @@ public class ImovelDao {
     }
 
     public boolean atualizar(Imovel imovel) {
-        String sql = "UPDATE imovel SET proprietario_id=?, nome_imovel=?, endereco=?, informacao_imovel=?, valor_imovel=? WHERE id=?";
+        String sql = "UPDATE imovel SET proprietario_id=?, nome_imovel=?, endereco=?, informacao_imovel=?, valor_imovel=?, tipo_imovel=? WHERE id=?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -109,7 +91,8 @@ public class ImovelDao {
             stmt.setString(3, imovel.getEndereco());
             stmt.setString(4, imovel.getInformacaoImovel());
             stmt.setDouble(5, Double.parseDouble(imovel.getValorImovel()));
-            stmt.setInt(6, imovel.getId());
+            stmt.setString(6, imovel.getTipoImovel()); // Novo campo
+            stmt.setInt(7, imovel.getId());
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -144,5 +127,89 @@ public class ImovelDao {
         }
         System.out.println("Erro: Imóvel com o ID '" + id + "' não encontrado para exclusão.");
         return false;
+    }
+
+    /**
+     * Lista imóveis com base em uma string de busca e filtros específicos.
+     *
+     * @param searchQuery Termo geral de busca (nome, endereço, informações). Pode ser null.
+     * @param filters     Mapa de filtros, onde a chave é o nome do filtro e o valor é o critério. Pode ser null.
+     *                    Ex: "bairro", "tipoImovel", "valorMin", "valorMax".
+     * @return Lista de imóveis que correspondem aos critérios.
+     */
+    public List<Imovel> listarComFiltro(String searchQuery, Map<String, String> filters) {
+        List<Imovel> listaImoveis = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT id, proprietario_id, nome_imovel, endereco, informacao_imovel, valor_imovel, tipo_imovel FROM imovel WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Adiciona a busca geral
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            sql.append(" AND (nome_imovel LIKE ? OR endereco LIKE ? OR informacao_imovel LIKE ?)");
+            String likeQuery = "%" + searchQuery.trim() + "%";
+            params.add(likeQuery);
+            params.add(likeQuery);
+            params.add(likeQuery);
+        }
+
+        // Adiciona filtros específicos
+        if (filters != null && !filters.isEmpty()) {
+            // Filtro por bairro
+            if (filters.containsKey("bairro") && !filters.get("bairro").isEmpty()) {
+                sql.append(" AND endereco LIKE ?");
+                params.add("%" + filters.get("bairro") + "%");
+            }
+            // Filtro por tipo de imóvel
+            if (filters.containsKey("tipoImovel") && !filters.get("tipoImovel").isEmpty()) {
+                sql.append(" AND tipo_imovel = ?");
+                params.add(filters.get("tipoImovel"));
+            }
+            // Filtro por valor mínimo
+            if (filters.containsKey("valorMin") && !filters.get("valorMin").isEmpty()) {
+                try {
+                    double valorMin = Double.parseDouble(filters.get("valorMin"));
+                    sql.append(" AND valor_imovel >= ?");
+                    params.add(valorMin);
+                } catch (NumberFormatException e) {
+                    System.err.println("Valor mínimo inválido: " + filters.get("valorMin"));
+                }
+            }
+            // Filtro por valor máximo
+            if (filters.containsKey("valorMax") && !filters.get("valorMax").isEmpty()) {
+                try {
+                    double valorMax = Double.parseDouble(filters.get("valorMax"));
+                    sql.append(" AND valor_imovel <= ?");
+                    params.add(valorMax);
+                } catch (NumberFormatException e) {
+                    System.err.println("Valor máximo inválido: " + filters.get("valorMax"));
+                }
+            }
+        }
+
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Imovel imovel = new Imovel(
+                            rs.getInt("id"),
+                            rs.getInt("proprietario_id"),
+                            rs.getString("nome_imovel"),
+                            rs.getString("endereco"),
+                            rs.getString("informacao_imovel"),
+                            String.valueOf(rs.getDouble("valor_imovel")),
+                            rs.getString("tipo_imovel")
+                    );
+                    listaImoveis.add(imovel);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar imóveis com filtro do banco de dados", e);
+        }
+        return listaImoveis;
     }
 }

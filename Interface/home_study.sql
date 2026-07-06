@@ -29,10 +29,11 @@ CREATE TABLE IF NOT EXISTS proprietario (
 -- Tabela Imovel (com chave estrangeira para Proprietario)
 CREATE TABLE IF NOT EXISTS imovel (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    proprietario_id INT NOT NULL, -- Chave estrangeira para o proprietário
+    proprietario_id INT NOT NULL,
     nome_imovel VARCHAR(100) NOT NULL,
     endereco VARCHAR(255) NOT NULL,
-    informacao_imovel TEXT, -- Alterado para TEXT para informações mais longas
-    valor_imovel DECIMAL(10, 2) NOT NULL, -- Alterado para DECIMAL para valores monetários
+    tipo_imovel VARCHAR(50), -- Adicionado aqui
+    informacao_imovel TEXT,
+    valor_imovel DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (proprietario_id) REFERENCES proprietario(usuario_id) ON DELETE CASCADE
 );

@@ -31,7 +31,7 @@
                 </Label>
             </HBox>
             <Region HBox.hgrow="ALWAYS" />
-            <TextField promptText="Pesquisar imoveis, bairros ou valores" prefHeight="40.0" prefWidth="380.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #777; -fx-border-width: 1.5; -fx-font-size: 14px;" />
+            <TextField fx:id="searchTextField" promptText="Pesquisar imoveis, bairros ou valores" prefHeight="40.0" prefWidth="380.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #777; -fx-border-width: 1.5; -fx-font-size: 14px;" onAction="#handleSearch" />
             <Button text="Filtros" onAction="#showPropertySearch" prefHeight="40.0" prefWidth="92.0" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
         </HBox>
     </top>
@@ -55,7 +55,7 @@
                     </padding>
                     <Button mnemonicParsing="false" onAction="#showHome" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d92828; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Principal" />
                     <Button fx:id="mapButton" mnemonicParsing="false" onAction="#showMap" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Radar" />
-                    <Button fx:id="searchButton" mnemonicParsing="false" onAction="#showPropertySearch" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Filtros" />
+                    <!-- REMOVIDO: Botão de Filtros da sidebar, pois já existe na parte superior -->
                     <Button fx:id="profileButton" mnemonicParsing="false" onAction="#showProfile" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #555; -fx-background-radius: 8; -fx-text-fill: white;" text="Perfil" />
                 </VBox>
             </children>
@@ -64,7 +64,7 @@
     <center>
         <StackPane fx:id="contentArea" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
             <children>
-                <Label text="HomeStudy" />
+                <!-- O conteúdo da tela principal (ex: lista de imóveis) será carregado aqui -->
             </children>
         </StackPane>
     </center>

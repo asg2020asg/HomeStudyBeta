@@ -5,8 +5,10 @@ import homestudy.dao.ImovelDao;
 import homestudy.dao.ProprietarioDao;
 import homestudy.model.Imovel;
 import homestudy.model.Proprietario;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -18,10 +20,19 @@ public class ProprietarioImovelRegisterViewController {
     @FXML private TextField enderecoField;
     @FXML private TextArea informacaoImovelArea;
     @FXML private TextField valorImovelField;
+    @FXML private ComboBox<String> tipoImovelComboBox; // NOVO: ComboBox para tipo de imóvel
     @FXML private Label labelMensagem;
 
     private ProprietarioDao proprietarioDao = new ProprietarioDao();
     private ImovelDao imovelDao = new ImovelDao();
+
+    @FXML
+    public void initialize() {
+        // Popula o ComboBox com as opções de tipo de imóvel
+        tipoImovelComboBox.setItems(FXCollections.observableArrayList(
+                "Casa", "Apartamento", "Kitnet", "Republica"
+        ));
+    }
 
     @FXML
     private void handleFinishRegister() {
@@ -29,9 +40,10 @@ public class ProprietarioImovelRegisterViewController {
         String endereco = enderecoField.getText();
         String informacaoImovel = informacaoImovelArea.getText();
         String valorImovel = valorImovelField.getText();
+        String tipoImovel = tipoImovelComboBox.getValue(); // NOVO: Obtém o tipo de imóvel selecionado
 
-        if (nomeImovel.isEmpty() || endereco.isEmpty() || valorImovel.isEmpty()) {
-            exibirAlerta("Aviso", "Por favor, preencha todos os campos obrigatórios do imóvel.");
+        if (nomeImovel.isEmpty() || endereco.isEmpty() || valorImovel.isEmpty() || tipoImovel == null || tipoImovel.isEmpty()) {
+            exibirAlerta("Aviso", "Por favor, preencha todos os campos obrigatórios do imóvel, incluindo o tipo.");
             return;
         }
 
@@ -74,7 +86,8 @@ public class ProprietarioImovelRegisterViewController {
             // -------------------------------------------------------------------------------------
 
             // 2. Criar o objeto Imovel e associá-lo ao proprietário recém-cadastrado
-            Imovel novoImovel = new Imovel(nomeImovel, endereco, informacaoImovel, valorImovel);
+            // NOVO: Passando o tipoImovel para o construtor
+            Imovel novoImovel = new Imovel(nomeImovel, endereco, informacaoImovel, valorImovel, tipoImovel);
             novoImovel.setProprietarioId(proprietario.getId()); // Define o ID do proprietário no imóvel
 
             // --- DEBUG: Verificar o proprietarioId do imóvel antes de cadastrar ---
